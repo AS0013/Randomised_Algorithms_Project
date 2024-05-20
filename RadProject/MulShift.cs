@@ -5,7 +5,7 @@ public class MulShiftHash {
     readonly Hashtable hashtable = new();
     private static short MultiplyShift(long x)
     {
-        long a = 249; // Generated using https://www.random.org/bytes/
+        long a = -4347435114166313097; // Generated using https://www.random.org/bytes/
         int l = 16; // hashing to short (16-bit int)
         short hash = (short)Math.Floor(
             (decimal)((int)Math.BigMul(a, x, out long low)>>(64 - l))
