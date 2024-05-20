@@ -1,13 +1,10 @@
-﻿using System;
-
-
-namespace RadProject
+﻿namespace RadProject
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            MulShiftHash mulShiftHash = new MulShiftHash();
         }
     }
 }
