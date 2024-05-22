@@ -11,14 +11,16 @@ namespace RadProject
             // geneate test stream
 
             //  StreamTest.CreateStream(10,10);
-            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(100000, 100);
+            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(10, 1);
 
             // test MulShiftHash
             watch.Start();
             foreach (var tuple in stream)
             {
-                Console.WriteLine("Hash: " + mulShiftHash.MultiplyShift((long)tuple.Item1));
+                // Console.WriteLine("Hash: " + mulShiftHash.MultiplyShift((long)tuple.Item1));
+                Console.WriteLine("Hash tuple: " + tuple.Item1 + " " + tuple.Item2);
                 sum += mulShiftHash.MultiplyShift((long)tuple.Item1);
+                
             }
             watch.Stop();
             long time1 = watch.ElapsedMilliseconds;
@@ -30,7 +32,7 @@ namespace RadProject
             long sum2 = 0;
             foreach (var tuple in stream)
             {
-                Console.WriteLine("Hash: " + mulShiftHash.MultiplyModPrime((long)tuple.Item1));
+                // Console.WriteLine("Hash: " + mulShiftHash.MultiplyModPrime((long)tuple.Item1));
                 sum2 += mulShiftHash.MultiplyModPrime((long)tuple.Item1);
             }
             watch.Stop();
