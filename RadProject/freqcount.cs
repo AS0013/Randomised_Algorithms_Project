@@ -26,6 +26,9 @@ public class FreqCount {
 
     }
 
+
+    // could just use the get(x) function from zeyu's hash table instead ??
+
     public long Sum_x(ulong x) {
         
         // check if x is in the hash table
