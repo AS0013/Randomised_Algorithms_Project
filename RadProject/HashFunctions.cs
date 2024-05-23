@@ -49,9 +49,9 @@ public class MulModPriHash : HashFunction{
         return hash;
     }
 
-    internal string MultiplyShift(long item1)
-    {
-        throw new NotImplementedException();
-    }
+    // internal string MultiplyShift(long item1)
+    // {
+    //     throw new NotImplementedException();
+    // }
 
 }
