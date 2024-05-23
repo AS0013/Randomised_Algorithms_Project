@@ -1,12 +1,17 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 namespace RadProject
 {
     class Program
     {
         static void Main(string[] args)
         {
-            MulShiftHash mulShiftHash = new MulShiftHash();
-            short sum = 0;
+            //set parameters for Multiply shift
+            long a = -4347435114166313097; // Generated using https://www.random.org/bytes/
+            int l = 16; // hashing to short (16-bit int) 
+            MulShiftHash mulShiftHash = new MulShiftHash(a,l);
+
+            long sum = 0;
             var watch = new Stopwatch();
             // geneate test stream
 
@@ -17,8 +22,8 @@ namespace RadProject
             watch.Start();
             foreach (var tuple in stream)
             {
-                Console.WriteLine("Hash: " + mulShiftHash.MultiplyShift((long)tuple.Item1));
-                sum += mulShiftHash.MultiplyShift((long)tuple.Item1);
+                Console.WriteLine("Hash: " + mulShiftHash.Hash((long)tuple.Item1));
+                sum += mulShiftHash.Hash((long)tuple.Item1);
             }
             watch.Stop();
             long time1 = watch.ElapsedMilliseconds;
@@ -27,11 +32,15 @@ namespace RadProject
 
             watch.Reset();
             watch.Start();
+            //set parameters for multiplymodprime
+            BigInteger b = BigInteger.Parse("595679239539172459088339861");
+            BigInteger c = BigInteger.Parse("165641934261307971454905931");
+            MulModPriHash MulModPriHash = new MulModPriHash(b,c,l);
             long sum2 = 0;
             foreach (var tuple in stream)
             {
-                Console.WriteLine("Hash: " + mulShiftHash.MultiplyModPrime((long)tuple.Item1));
-                sum2 += mulShiftHash.MultiplyModPrime((long)tuple.Item1);
+                Console.WriteLine("Hash: " + MulModPriHash.Hash((long)tuple.Item1));
+                sum2 +=  MulModPriHash.Hash((long)tuple.Item1);
             }
             watch.Stop();
             long time2 = watch.ElapsedMilliseconds;
