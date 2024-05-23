@@ -4,20 +4,20 @@ using System.Numerics;
 namespace RadProject;
 public class HashFunction{
     public int l;
-    public virtual long Hash(long x){
+    public virtual ulong Hash(ulong x){
         return x;
     }
 
 }
 public class MulShiftHash : HashFunction {
-    long a;
-    public MulShiftHash (long a,int l){
+    ulong a;
+    public MulShiftHash (ulong a,int l){
         this.a = a;
         this.l = l;
     }
-    public override long Hash(long x){
-        long hash = (long)Math.Floor(
-            (decimal)((int)Math.BigMul(a, x, out long low)>>(64 - l))
+    public override ulong Hash(ulong x){
+        ulong hash = (ulong)Math.Floor(
+            (decimal)(Math.BigMul(a, x, out ulong low)>>(64 - l))
         );
         return hash;
     }
@@ -31,7 +31,7 @@ public class MulModPriHash : HashFunction{
         this.b = b; 
         this.l = l; 
     }
-    public override long Hash(long x){
+    public override ulong Hash(ulong x){
         BigInteger p = new BigInteger(2^89 -1);
         BigInteger x_big = new BigInteger(x);
 
@@ -42,16 +42,16 @@ public class MulModPriHash : HashFunction{
         }
 
         // long hash = (y&2^l) + (y>>l);
-        long hash = (long)((y & (2^l)) + (y >> (Int32)l));
-        if (hash >= (2^l)){
-            hash -= 2^l;
+        ulong hash = (ulong)((y & (2^l)) + (y >> (Int32)l));
+        if (hash >= (ulong)(2^l)){
+            hash -= (ulong)(2^l);
         }
         return hash;
     }
 
-    internal string MultiplyShift(long item1)
-    {
-        throw new NotImplementedException();
-    }
+    // internal string MultiplyShift(long item1)
+    // {
+    //     throw new NotImplementedException();
+    // }
 
 }
