@@ -73,25 +73,48 @@ namespace RadProject
 
             // table1.InitializeTable(stream);
             // table2.InitializeTable(stream);
-            watch.Reset();
-            watch.Start();
-            long table1_sum = table1.QuadraticSum(stream);
-            watch.Stop();
-            long time3 = watch.ElapsedMilliseconds;
+            // watch.Reset();
+            // watch.Start();
+            // long table1_sum = table1.QuadraticSum(stream);
+            // watch.Stop();
+            // long time3 = watch.ElapsedMilliseconds;
 
-            watch.Reset();
-            watch.Start();
-            long table2_sum = table2.QuadraticSum(stream);
-            watch.Stop();
-            long time4 = watch.ElapsedMilliseconds;
+            // watch.Reset();
+            // watch.Start();
+            // long table2_sum = table2.QuadraticSum(stream);
+            // watch.Stop();
+            // long time4 = watch.ElapsedMilliseconds;
 
             
-            Console.WriteLine("mulShifthash quad sum: " + table1_sum);
-            Console.WriteLine("MulModPriHash quad sum: " + table2_sum);
-            Console.WriteLine("Time elapsed for MultiplyShift    (Quadratic Sum): " + time3);
-            Console.WriteLine("Time elapsed for MultiplyModPrime (Quadratic Sum): " + time4);
-            Console.WriteLine("Difference: " + (time3 - time4));
+            // Console.WriteLine("mulShifthash quad sum: " + table1_sum);
+            // Console.WriteLine("MulModPriHash quad sum: " + table2_sum);
+            // Console.WriteLine("Time elapsed for MultiplyShift    (Quadratic Sum): " + time3);
+            // Console.WriteLine("Time elapsed for MultiplyModPrime (Quadratic Sum): " + time4);
+            // Console.WriteLine("Difference: " + (time3 - time4));
             // Console.WriteLine(count);
+
+            // test four hash function
+            
+
+
+            BigInteger a0 = BigInteger.Parse("595679239539172459088339861"); //for now i just used the ones from above. but should probably generate new ones
+            BigInteger a1 = BigInteger.Parse("165641934261347971454905931");
+            BigInteger a2 = BigInteger.Parse("165641934261327971454905931");
+            BigInteger a3 = BigInteger.Parse("165641934261317971454905931");
+
+            FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
+
+            IEnumerable<Tuple<ulong, int>> stream1 = StreamTest.CreateStream(50,50);
+
+            int sum = 0;
+
+            foreach (var tuple in stream1)
+            {
+                sum += (int)fourhashfunc.Hash(tuple.Item1);
+
+            }
+            Console.WriteLine("Sum: " + sum);
+
         }
     }
 }

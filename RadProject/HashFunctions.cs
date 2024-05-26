@@ -55,3 +55,47 @@ public class MulModPriHash : HashFunction{
     // }
 
 }
+
+public class FourHashFunction : HashFunction{
+
+    // 4-universal hashfunction g(x) = a0 + a1x + a2x^2 + a3x^3 mod p
+
+    List<BigInteger> a_values = new List<BigInteger>();
+
+    public FourHashFunction (BigInteger a0, BigInteger a1,BigInteger a2,BigInteger a3 ){
+        a_values.Add(a0);
+        a_values.Add(a1);
+        a_values.Add(a2);
+        a_values.Add(a3);
+    }
+
+    public override ulong Hash(ulong x)
+    {
+
+        BigInteger p = new BigInteger(2^89 -1);
+
+        BigInteger x_big = new BigInteger(x);
+
+        BigInteger y = a_values[3];
+
+        for (int i = 2; i >= 0; i--)
+        {
+            BigInteger temp = BigInteger.Multiply(y, x_big);
+            y = temp + a_values[i];
+            y = (y & p) + (y >> 89);
+        }
+
+        if (y>=p){
+            y -= p;
+        }
+        Console.WriteLine("Y: " + y);
+
+        return (ulong) y;
+
+
+      
+    }
+
+
+
+}
