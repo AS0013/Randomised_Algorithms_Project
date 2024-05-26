@@ -115,6 +115,12 @@ namespace RadProject
             }
             Console.WriteLine("Sum: " + sum);
 
+            // test countsketchhash
+ 
+            ulong input = 34359738368;
+            Console.WriteLine("TEST "+MulModPriHash .Hash(input));
+            CountSketchHash C = new CountSketchHash(MulModPriHash ,l);
+            Console.WriteLine("TEST COUNTSKETCH: INPUT: " + input + " OUTPUT:" + C.CSHash(input));
         }
     }
 }

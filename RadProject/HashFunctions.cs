@@ -16,9 +16,7 @@ public class MulShiftHash : HashFunction {
         this.l = l;
     }
     public override ulong Hash(ulong x){
-        ulong hash = (ulong)Math.Floor(
-            (decimal)(Math.BigMul(a, x, out ulong low)>>(64 - l))
-        );
+        ulong hash = Math.BigMul(a,x, out ulong low)>>(64 - l);    
         return hash;
     }
 }
@@ -95,7 +93,21 @@ public class FourHashFunction : HashFunction{
 
       
     }
+}
+public class CountSketchHash : HashFunction{
+    HashFunction g;
+    int b = 89;
+    public CountSketchHash (HashFunction g, int l){
+        this.g = g;
+        this.l = l;
+    }
 
-
-
+    public (ulong,long) CSHash(ulong x)
+    {
+        //h(x)
+        ulong h = g.Hash(x) & ((1UL<<l)-1);
+        //s(x)
+        long s = 1-2*((long)g.Hash(x) >> (b-1));
+        return (h,s);
+    }
 }
