@@ -46,7 +46,7 @@ public class ChainHashTable {
     }
     public void Increment (ulong x, int v){
         ulong index = h.Hash(x);
-        Console.WriteLine("X: "+ x +"Index: " + index);
+        // Console.WriteLine("X: "+ x +"Index: " + index);
         if (table.ContainsKey(index))
         {
             foreach (var pair in table[index])
@@ -74,13 +74,16 @@ public class ChainHashTable {
     }
 
     //sum of squares.
-    public long QuadraticSum() {
+    public long QuadraticSum(IEnumerable<Tuple<ulong, int>> stream) {
         long sum = 0;
-        Console.WriteLine("starting sum");
+
+        this.InitializeTable(stream);
+
+        // Console.WriteLine("starting sum");
         foreach (LinkedList<KeyValuePair<ulong, int>> list in table.Values){
-            Console.WriteLine("LinkedList Count: " + list.Count);
+            // Console.WriteLine("LinkedList Count: " + list.Count);
             foreach (KeyValuePair<ulong, int> pair in list){
-                Console.WriteLine("Pair: " + pair.Key + " " + pair.Value);
+                // Console.WriteLine("Pair: " + pair.Key + " " + pair.Value);
                 sum += (long)Math.Pow(pair.Value, 2);
 
             }
