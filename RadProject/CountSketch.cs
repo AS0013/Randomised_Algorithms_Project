@@ -18,7 +18,7 @@ public class CountSketch {
 
 
     private long[] Init(IEnumerable<Tuple<ulong, int>> stream) {
-        long[] C = new long[l];
+        long[] C = new long[(int)Math.Pow(2, l)];
         foreach (var tuple in stream) {
             ulong hHash = g.CSHash(tuple.Item1).Item1;
             long sHash = g.CSHash(tuple.Item1).Item2;

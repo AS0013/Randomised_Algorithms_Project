@@ -8,6 +8,10 @@ public class HashFunction{
         return x;
     }
 
+    // public virtual BigInteger Hash(ulong){
+    //     return x;
+    // }
+
 }
 public class MulShiftHash : HashFunction {
     ulong a;
@@ -48,7 +52,7 @@ public class MulModPriHash : HashFunction{
             hash -= (ulong)(2^l);
         }
 
-        Console.WriteLine("input: " + x + " hashed: " + hash); 
+        // Console.WriteLine("input: " + x + " hashed: " + hash); 
 
         return hash;
     }
