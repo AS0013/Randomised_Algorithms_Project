@@ -9,7 +9,7 @@ namespace RadProject
             //set parameters for Multiply shift
             ulong a = 1470686635362862957; // Generated using https://www.random.org/bytes/
             int l = 16; // hashing to short (16-bit int) 
-            int n =(int) Math.Pow(2, 16);
+            int n =(int) Math.Pow(2, 17);
             Console.WriteLine(n);
             MulShiftHash mulShiftHash = new MulShiftHash(a,l);
 
