@@ -105,14 +105,14 @@ namespace RadProject
 
             // IEnumerable<Tuple<ulong, int>> stream1 = StreamTest.CreateStream(50,50);
 
-            BigInteger sum1 = 0;
+            // BigInteger sum1 = 0;
 
-            foreach (var tuple in stream)
-            {
-                sum1 += fourhashfunc.Hash(tuple.Item1);
+            // foreach (var tuple in stream)
+            // {
+            //     sum1 += fourhashfunc.Hash(tuple.Item1);
 
-            }
-            Console.WriteLine("Sum: " + sum1);
+            // }
+            // Console.WriteLine("Sum: " + sum1);
 
             // test countsketchhash
  
@@ -120,6 +120,12 @@ namespace RadProject
             Console.WriteLine("TEST "+MulModPriHash .Hash(input));
             CountSketchHash C = new CountSketchHash(MulModPriHash ,l);
             Console.WriteLine("TEST COUNTSKETCH: INPUT: " + input + " OUTPUT:" + C.CSHash(input));
+
+            // test countsketch
+
+            CountSketch countSketch = new CountSketch(C,stream);
+
+            Console.WriteLine("Estimate X: " + countSketch.X);
         }
     }
 }
