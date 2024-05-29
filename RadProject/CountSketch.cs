@@ -16,7 +16,7 @@ public class CountSketch {
         X = EstimateX();
     }
 
-    // TODO: Find out how to input w as a constant
+
     private long[] Init(IEnumerable<Tuple<ulong, int>> stream) {
         long[] C = new long[l];
         foreach (var tuple in stream) {

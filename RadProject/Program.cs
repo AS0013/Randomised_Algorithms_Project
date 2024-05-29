@@ -34,8 +34,8 @@ namespace RadProject
             // watch.Start();
             // foreach (var tuple in stream)
             // {
-            //     // Console.WriteLine("Hash: " + mulShiftHash.Hash((long)tuple.Item1));
-            //     sum += mulShiftHash.Hash(tuple.Item1);
+            //     mulShiftHash.Hash(tuple.Item1);
+            //     // sum += mulShiftHash.Hash(tuple.Item1);
             // }
             // watch.Stop();
             // long time1 = watch.ElapsedMilliseconds;
@@ -105,7 +105,7 @@ namespace RadProject
 
             // IEnumerable<Tuple<ulong, int>> stream1 = StreamTest.CreateStream(50,50);
 
-            ulong sum1 = 0;
+            BigInteger sum1 = 0;
 
             foreach (var tuple in stream)
             {
