@@ -14,8 +14,8 @@ public class CountSketch {
 
     // TODO: Find out how to input w as a constant
     private ulong[] Init(IEnumerable<Tuple<ulong, int>> stream) {
-        const int size; // length of image of h(x) = 2^t <= 2^64
-        ulong[] C = new ulong[size] {};
+        // const int size; // length of image of h(x) = 2^t <= 2^64
+        // ulong[] C = new ulong[size] {};
         foreach (var tuple in stream) {
             ulong hHash = h.Hash(tuple.Item1);
             ulong sHash = s.Hash(tuple.Item1);

@@ -20,7 +20,7 @@ public class MulShiftHash : HashFunction {
         ulong hash = Math.BigMul(a,x, out low);
         ulong hashed = low >> (64 - l);
         Console.WriteLine("input: " + x + " hashed: " + hashed); 
-        return hash;
+        return hashed;
     }
 }
 public class MulModPriHash : HashFunction{
@@ -60,7 +60,7 @@ public class MulModPriHash : HashFunction{
 
 }
 
-public class FourHashFunction : HashFunction{
+public class FourHashFunction{
 
     // 4-universal hashfunction g(x) = a0 + a1x + a2x^2 + a3x^3 mod p
 
@@ -73,28 +73,36 @@ public class FourHashFunction : HashFunction{
         a_values.Add(a3);
     }
 
-    public override ulong Hash(ulong x)
+    public BigInteger Hash(ulong x)
     {
 
-        BigInteger p = new BigInteger(2^89 -1);
+        BigInteger p;
+
+        p = BigInteger.Pow(2, 89) - 1;
 
         BigInteger x_big = new BigInteger(x);
 
         BigInteger y = a_values[3];
+
+        // ulong k = 4;
 
         for (int i = 2; i >= 0; i--)
         {
             BigInteger temp = BigInteger.Multiply(y, x_big);
             y = temp + a_values[i];
             y = (y & p) + (y >> 89);
+            // y = (y * x_big + a_values[i]) % p;
         }
 
         if (y>=p){
             y -= p;
         }
-        Console.WriteLine("Y: " + y);
 
-        return (ulong) y;
+        // ulong y_k = (ulong)( y & (k-1));
+
+        Console.WriteLine("Y: " + y + " X: " + x);
+        
+        return y;
 
 
       
