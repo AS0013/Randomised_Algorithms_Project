@@ -8,7 +8,7 @@ public class HashFunction{
         return x;
     }
 
-    // public virtual BigInteger Hash(ulong){
+    // public virtual BigInteger Hash(ulong x){
     //     return x;
     // }
 
