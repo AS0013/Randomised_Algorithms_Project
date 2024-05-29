@@ -1,33 +1,36 @@
 namespace RadProject;
 
 public class CountSketch {
-    readonly HashFunction h;
-    readonly HashFunction s;
-    readonly ulong[] C;
-    readonly ulong X;
-    public CountSketch(HashFunction h, HashFunction s, IEnumerable<Tuple<ulong, int>> stream) {
-        this.h = h;
-        this.s = s;
+    readonly CountSketchHash g;
+    public long[] C {
+            get;
+    }
+    public long X {
+        get;
+    }
+    readonly int l;
+    public CountSketch(CountSketchHash g, IEnumerable<Tuple<ulong, int>> stream) {
+        this.g = g;
+        l = g.l;
         C = Init(stream);
         X = EstimateX();
     }
 
-    // TODO: Find out how to input w as a constant
-    private ulong[] Init(IEnumerable<Tuple<ulong, int>> stream) {
-        // const int size; // length of image of h(x) = 2^t <= 2^64
-        // ulong[] C = new ulong[size] {};
+
+    private long[] Init(IEnumerable<Tuple<ulong, int>> stream) {
+        long[] C = new long[l];
         foreach (var tuple in stream) {
-            ulong hHash = h.Hash(tuple.Item1);
-            ulong sHash = s.Hash(tuple.Item1);
+            ulong hHash = g.CSHash(tuple.Item1).Item1;
+            long sHash = g.CSHash(tuple.Item1).Item2;
             C[hHash] += sHash;
         }
         return C;
     }
 
-    private ulong EstimateX() {
-        ulong sum = 0;
+    private long EstimateX() {
+        long sum = 0;
         for (int i = 0; i < C.Length; i++) {
-            sum += (ulong)Math.Pow(C[i], 2);
+            sum += (long)Math.Pow(C[i], 2);
         }
         return sum;
     }
