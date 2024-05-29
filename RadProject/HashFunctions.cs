@@ -16,7 +16,10 @@ public class MulShiftHash : HashFunction {
         this.l = l;
     }
     public override ulong Hash(ulong x){
-        ulong hash = Math.BigMul(a,x, out ulong low)>>(64 - l);    
+        ulong low;
+        ulong hash = Math.BigMul(a,x, out low);
+        ulong hashed = low >> (64 - l);
+        Console.WriteLine("input: " + x + " hashed: " + hashed); 
         return hash;
     }
 }
@@ -44,6 +47,9 @@ public class MulModPriHash : HashFunction{
         if (hash >= (ulong)(2^l)){
             hash -= (ulong)(2^l);
         }
+
+        Console.WriteLine("input: " + x + " hashed: " + hash); 
+
         return hash;
     }
 

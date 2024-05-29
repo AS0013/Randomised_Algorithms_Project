@@ -18,14 +18,14 @@ namespace RadProject
             // geneate test stream
 
             //  StreamTest.CreateStream(10,10);
-            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n, (int) Math.Pow(2,l));
+            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n, l);
             // IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(50,10);
             Console.WriteLine("Stream generated");
             // int count = 0;
             // print out the stream
             // foreach (var tuple in stream)
             // {
-            //     // Console.WriteLine("Item1: " + tuple.Item1 + " Item2: " + tuple.Item2);
+            //     Console.WriteLine("Item1: " + tuple.Item1 + " Item2: " + tuple.Item2);
             //     // count++;
             // }
             // Console.WriteLine("Count: " + count);
@@ -51,8 +51,8 @@ namespace RadProject
             // ulong sum2 = 0;
             // foreach (var tuple in stream)
             // {
-            //     // Console.WriteLine("Hash: " + MulModPriHash.Hash((long)tuple.Item1));
-            //     sum2 +=  MulModPriHash.Hash(tuple.Item1);
+            //     MulModPriHash.Hash(tuple.Item1);
+            //     // sum2 +=  MulModPriHash.Hash(tuple.Item1);
             // }
             // watch.Stop();
             // long time2 = watch.ElapsedMilliseconds;
@@ -96,24 +96,23 @@ namespace RadProject
             // test four hash function
             
 
-
-            BigInteger a0 = BigInteger.Parse("595679239539172459088339861"); //for now i just used the ones from above. but should probably generate new ones
-            BigInteger a1 = BigInteger.Parse("165641934261347971454905931");
-            BigInteger a2 = BigInteger.Parse("165641934261327971454905931");
-            BigInteger a3 = BigInteger.Parse("165641934261317971454905931");
+            BigInteger a0 = BigInteger.Parse("339176588342155335418149214"); // Generated using https://www.random.org/bytes/
+            BigInteger a1 = BigInteger.Parse("545615294102633400098072839"); // Generated using https://www.random.org/bytes/
+            BigInteger a2 = BigInteger.Parse("559758820152785102864000321"); // Generated using https://www.random.org/bytes/
+            BigInteger a3 = BigInteger.Parse("189597206666064321536354137"); // Generated using https://www.random.org/bytes/
 
             FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
 
-            IEnumerable<Tuple<ulong, int>> stream1 = StreamTest.CreateStream(50,50);
+            // IEnumerable<Tuple<ulong, int>> stream1 = StreamTest.CreateStream(50,50);
 
-            int sum = 0;
+            ulong sum1 = 0;
 
-            foreach (var tuple in stream1)
+            foreach (var tuple in stream)
             {
-                sum += (int)fourhashfunc.Hash(tuple.Item1);
+                sum1 += fourhashfunc.Hash(tuple.Item1);
 
             }
-            Console.WriteLine("Sum: " + sum);
+            Console.WriteLine("Sum: " + sum1);
 
             // test countsketchhash
  
