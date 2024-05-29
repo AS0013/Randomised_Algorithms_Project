@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿﻿using System.Diagnostics;
 using System.Numerics;
 namespace RadProject
 {
@@ -34,8 +34,8 @@ namespace RadProject
             // watch.Start();
             // foreach (var tuple in stream)
             // {
-            //     // Console.WriteLine("Hash: " + mulShiftHash.Hash((long)tuple.Item1));
-            //     sum += mulShiftHash.Hash(tuple.Item1);
+            //     mulShiftHash.Hash(tuple.Item1);
+            //     // sum += mulShiftHash.Hash(tuple.Item1);
             // }
             // watch.Stop();
             // long time1 = watch.ElapsedMilliseconds;
@@ -105,21 +105,27 @@ namespace RadProject
 
             // IEnumerable<Tuple<ulong, int>> stream1 = StreamTest.CreateStream(50,50);
 
-            ulong sum1 = 0;
+            // BigInteger sum1 = 0;
 
-            foreach (var tuple in stream)
-            {
-                sum1 += fourhashfunc.Hash(tuple.Item1);
+            // foreach (var tuple in stream)
+            // {
+            //     sum1 += fourhashfunc.Hash(tuple.Item1);
 
-            }
-            Console.WriteLine("Sum: " + sum1);
+            // }
+            // Console.WriteLine("Sum: " + sum1);
 
             // test countsketchhash
  
-            ulong input = 34359738368;
-            Console.WriteLine("TEST "+MulModPriHash .Hash(input));
-            CountSketchHash C = new CountSketchHash(MulModPriHash ,l);
-            Console.WriteLine("TEST COUNTSKETCH: INPUT: " + input + " OUTPUT:" + C.CSHash(input));
+            // ulong input = 34359738368;
+            // Console.WriteLine("TEST "+MulModPriHash .Hash(input));
+            CountSketchHash G = new CountSketchHash(fourhashfunc ,l);
+            // Console.WriteLine("TEST COUNTSKETCH: INPUT: " + input + " OUTPUT:" + C.CSHash(input));
+
+            // test countsketch
+
+            CountSketch countSketch = new CountSketch(G,stream);
+
+            Console.WriteLine("Estimate X: " + countSketch.X);
         }
     }
 }

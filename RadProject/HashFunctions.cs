@@ -8,6 +8,10 @@ public class HashFunction{
         return x;
     }
 
+    // public virtual BigInteger Hash(ulong){
+    //     return x;
+    // }
+
 }
 public class MulShiftHash : HashFunction {
     ulong a;
@@ -19,8 +23,8 @@ public class MulShiftHash : HashFunction {
         ulong low;
         ulong hash = Math.BigMul(a,x, out low);
         ulong hashed = low >> (64 - l);
-        Console.WriteLine("input: " + x + " hashed: " + hashed); 
-        return hash;
+        // Console.WriteLine("input: " + x + " hashed: " + hashed); 
+        return hashed;
     }
 }
 public class MulModPriHash : HashFunction{
@@ -48,7 +52,7 @@ public class MulModPriHash : HashFunction{
             hash -= (ulong)(2^l);
         }
 
-        Console.WriteLine("input: " + x + " hashed: " + hash); 
+        // Console.WriteLine("input: " + x + " hashed: " + hash); 
 
         return hash;
     }
@@ -60,7 +64,7 @@ public class MulModPriHash : HashFunction{
 
 }
 
-public class FourHashFunction : HashFunction{
+public class FourHashFunction{
 
     // 4-universal hashfunction g(x) = a0 + a1x + a2x^2 + a3x^3 mod p
 
@@ -73,47 +77,71 @@ public class FourHashFunction : HashFunction{
         a_values.Add(a3);
     }
 
-    public override ulong Hash(ulong x)
+    public BigInteger Hash(ulong x)
     {
 
-        BigInteger p = new BigInteger(2^89 -1);
+        BigInteger p;
+
+        p = BigInteger.Pow(2, 89) - 1;
 
         BigInteger x_big = new BigInteger(x);
 
         BigInteger y = a_values[3];
+
+        // ulong k = 4;
 
         for (int i = 2; i >= 0; i--)
         {
             BigInteger temp = BigInteger.Multiply(y, x_big);
             y = temp + a_values[i];
             y = (y & p) + (y >> 89);
+            // y = (y * x_big + a_values[i]) % p;
         }
 
         if (y>=p){
             y -= p;
         }
-        Console.WriteLine("Y: " + y);
 
-        return (ulong) y;
+        // ulong y_k = (ulong)( y & (k-1));
 
-
-      
+        // Console.WriteLine("Y: " + y + " X: " + x);
+        
+        return y;
+    
     }
 }
 public class CountSketchHash : HashFunction{
-    HashFunction g;
+    FourHashFunction g;
     int b = 89;
-    public CountSketchHash (HashFunction g, int l){
+    public CountSketchHash (FourHashFunction g, int l){
         this.g = g;
         this.l = l;
     }
 
-    public (ulong,long) CSHash(ulong x)
+    public (BigInteger,int) CSHash(ulong x)
+    {
+        //h(x)
+        BigInteger h = g.Hash(x) & ((1UL<<l)-1);
+        //s(x)
+        int s = (int)(1-2*((BigInteger)g.Hash(x) >> (b-1)));
+        return (h,s);
+    }
+}
+
+public class CountSketchHashX : HashFunction{
+    HashFunction g;
+    int b = 89;
+    public CountSketchHashX (HashFunction g, int l){
+        this.g = g;
+        this.l = l;
+    }
+
+    public (ulong,int) CSHash(ulong x)
     {
         //h(x)
         ulong h = g.Hash(x) & ((1UL<<l)-1);
         //s(x)
-        long s = 1-2*((long)g.Hash(x) >> (b-1));
+        int s = (int)(1 -2*((long)g.Hash(x) >> (b-1)));
         return (h,s);
     }
 }
