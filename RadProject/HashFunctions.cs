@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Numerics;
-using System;
-
 namespace RadProject;
 public class HashFunction{
     public int l;
@@ -40,16 +37,16 @@ public class MulModPriHash : HashFunction{
     public override ulong Hash(ulong x){
         BigInteger p = BigInteger.Pow(2,89)-1;
         BigInteger x_big = new BigInteger(x);
-        Console.WriteLine("a " + (BigInteger.Multiply(a,x_big) + b));
+        // Console.WriteLine("a " + (BigInteger.Multiply(a,x_big) + b));
         BigInteger y =  ((BigInteger.Multiply(a,x_big) + b) & p) + ((BigInteger.Multiply(a,x_big) + b) >> 89);
 
         if (y>=p){
             y -= p;
         }
-        Console.WriteLine("y " + (y));
+        // Console.WriteLine("y " + (y));
         // long hash = (y&2^l) + (y>>l);
         ulong hash = (ulong)(y & ((1UL << 16) -1));
-        Console.WriteLine("hash " + (hash));
+        // Console.WriteLine("hash " + (hash));
         // Console.WriteLine("input: " + x + " hashed: " + hash); 
 
         return hash;
