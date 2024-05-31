@@ -1,6 +1,9 @@
 ﻿﻿using System.Collections;
 using System.Diagnostics;
 using System.Numerics;
+using System.Collections.Generic;
+using ScottPlot;
+
 namespace RadProject
 {
     class Program
@@ -72,24 +75,21 @@ namespace RadProject
             ChainHashTable table1 = new ChainHashTable(l7,countSketchHash);
             long quadraticSum = table1.QuadraticSum(stream);
             Console.WriteLine("multiply shift hash Quadratic sum:" + quadraticSum );
-            CountSketch countSketch1 = new CountSketch(countSketchHash ,l7);
-            long aaa = countSketch1.EstimateX(stream);
-             Console.WriteLine(aaa);
             // initiate results list for estimates:
             List<long> QSTable = new List<long>();
 
-            int testCount=10;
+            int testCount=100;
             for(int i = 1; i <= testCount; i++)
             {   
                 //random values for four hash
                 BigInteger[] A = new BigInteger[4];
-                Console.WriteLine("Random values: ");
+                //Console.WriteLine("Random values: ");
                 for (int j=0; j<A.Length;j++){
                 byte[] bytes = new byte[12];
                     new Random().NextBytes(bytes);
                     A[j] = new BigInteger(bytes);
                     A[j]= A[j] & (BigInteger.Pow(2, 89) - 1);
-                    Console.WriteLine(A[j]);
+                    //Console.WriteLine(A[j]);
                 }
                 //hash functions:
                 FourHashFunction fourHash= new FourHashFunction(A[0],A[1],A[2],A[3]);
@@ -125,8 +125,41 @@ namespace RadProject
             Console.WriteLine("Anticipated Expected value: " + quadraticSum + " Mean: " + mean);
             Console.WriteLine("Anticipated variance: " + Math.Round(2*Math.Pow(quadraticSum,2)/Math.Pow(2,l7)) + " Variance: " + variance);
 
-            //mean square error
+            // groups and median:
+            // divide into groups:
+            List<List<long>> QSTableGroups = new List<List<long>>();
+            for (int i = 0; i < (testCount-1)/11; i++)
+            {
+                QSTableGroups.Add(QSTable.Skip(i * 11).Take(11).ToList());
+            }
+            //medians of each group:
+            List<long> QSTablemedians = new List<long>();
+            foreach (var group in QSTableGroups)
+            {
+                group.Sort();
+                long median = group[group.Count / 2];
+                QSTablemedians.Add(median);
+            }
+            QSTablemedians.Sort();
 
+            // Create a Plot object
+            var plt = new ScottPlot.Plot();
+            // Add a scatter plot
+            plt.Add.Line(0, quadraticSum,100, quadraticSum);
+            List<int> numbers = Enumerable.Range(1, 100).ToList();
+            plt.Add.ScatterPoints(numbers, QSTable);
+            plt.Axes.SetLimits(0, 100, 220000, 260000);
+            plt.SavePng("100ResultsPlot.png", 1024, 768);
+            Console.WriteLine("100 points Plot saved in directory");
+
+            var plt2 = new ScottPlot.Plot();
+            // Add a scatter plot
+            plt2.Add.Line(0, quadraticSum,10, quadraticSum);
+            List<int> numbers2 = Enumerable.Range(1, 10).ToList();
+            plt2.Add.ScatterPoints(numbers2, QSTablemedians);
+            plt2.Axes.SetLimits(0, 10, 220000, 260000);
+            plt2.SavePng("MediansPlot.png", 1024, 768);
+            Console.WriteLine("medians Plot saved in directory");
             // //TESTS FOR HASH FUNCTIONS:
             // int testl = 16; 
             // //TEST MULSHIFT HASH:
