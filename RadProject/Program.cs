@@ -56,7 +56,11 @@ namespace RadProject
 
             int max7 = 17;
             int n7 = (int)Math.Pow(2,max7);
-            int l7 = 16;
+            int l7 = 13;
+            // geneate test stream
+            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n7, l7);
+            
+            // Calculate Quadratic Sum
             // initiate fourhash
             BigInteger a0 = BigInteger.Parse("339176588342155335418149214"); // Generated using https://www.random.org/bytes/
             BigInteger a1 = BigInteger.Parse("545615294102633400098072839"); // Generated using https://www.random.org/bytes/
@@ -65,20 +69,33 @@ namespace RadProject
             FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
             // initiate countsketchhash
             CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,l7);
-            // initiate results list:
-            List<long> QSTable = new List<long>();
-            // geneate test stream
-            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n7, l7);
-            // Calculate Quadratic Sum
             ChainHashTable table1 = new ChainHashTable(l7,countSketchHash);
             long quadraticSum = table1.QuadraticSum(stream);
             Console.WriteLine("multiply shift hash Quadratic sum:" + quadraticSum );
+            CountSketch countSketch1 = new CountSketch(countSketchHash ,l7);
+            long aaa = countSketch1.EstimateX(stream);
+             Console.WriteLine(aaa);
+            // initiate results list for estimates:
+            List<long> QSTable = new List<long>();
 
-            int testCount=1;
+            int testCount=10;
             for(int i = 1; i <= testCount; i++)
-            {          
+            {   
+                //random values for four hash
+                BigInteger[] A = new BigInteger[4];
+                Console.WriteLine("Random values: ");
+                for (int j=0; j<A.Length;j++){
+                byte[] bytes = new byte[12];
+                    new Random().NextBytes(bytes);
+                    A[j] = new BigInteger(bytes);
+                    A[j]= A[j] & (BigInteger.Pow(2, 89) - 1);
+                    Console.WriteLine(A[j]);
+                }
+                //hash functions:
+                FourHashFunction fourHash= new FourHashFunction(A[0],A[1],A[2],A[3]);
+                CountSketchHash CShash = new CountSketchHash(fourHash ,l7);
                 //countsketch estimate for QS
-                CountSketch countSketch = new CountSketch(countSketchHash,l7);
+                CountSketch countSketch = new CountSketch(CShash,l7);
                 long QSEstim = countSketch.EstimateX(stream);
                  Console.WriteLine("Test" + i + ": random values: " + "Estimate: " + QSEstim);
                 QSTable.Add(QSEstim);

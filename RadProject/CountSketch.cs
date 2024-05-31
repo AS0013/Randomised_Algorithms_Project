@@ -34,7 +34,7 @@ public class CountSketch {
         this.Init(stream);
         long sum = 0;
         foreach (var x in C) {
-            sum += (long)Math.Pow(x.Value, 2);
+            sum += (long)x.Value * x.Value;
         }
         return sum;
     }
