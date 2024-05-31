@@ -14,19 +14,18 @@ public class CountSketch {
 
 
     private SortedList<BigInteger , int> Init(IEnumerable<Tuple<ulong, int>> stream) {
-        Console.WriteLine("monke");
         foreach (var tuple in stream) {
-        BigInteger hHash = g.CSHash(tuple.Item1).Item1;
-        int sHash = g.CSHash(tuple.Item1).Item2;
-            if (C.ContainsKey(hHash))
-            {
-                C[hHash] += sHash;
-                //Console.WriteLine("aaa"+C[hHash]);
-            }
-            else {
-                C.Add(hHash, sHash);
-                //Console.WriteLine("aaa"+C[hHash]);
-            }  
+            BigInteger hHash = g.CSHash(tuple.Item1).Item1;
+            int sHash = g.CSHash(tuple.Item1).Item2;
+                if (C.ContainsKey(hHash))
+                {
+                    C[hHash] += sHash*tuple.Item2;
+                    //Console.WriteLine("aaa"+C[hHash]);
+                }
+                else {
+                    C.Add(hHash, sHash);
+                    //Console.WriteLine("aaa"+C[hHash]);
+                }  
         }
         return C;
     }

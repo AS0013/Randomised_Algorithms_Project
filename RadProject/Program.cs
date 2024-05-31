@@ -65,7 +65,7 @@ namespace RadProject
             // initiate countsketchhash
             CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,l7);
     
-            for(int i = 1; i <= 10; i++)
+            for(int i = 1; i <= 1; i++)
             {
                                
                 // geneate test stream
@@ -79,7 +79,7 @@ namespace RadProject
                 //countsketch
                 CountSketch countSketch = new CountSketch(countSketchHash,l7);
                 long table1_estim = countSketch.EstimateX(stream);
-                 Console.WriteLine("multiply shift hash Quadratic sum:" + table1_sum);
+                 Console.WriteLine("multiply shift hash Quadratic sum ESTIMATE:" + table1_estim);
             }
             
             // //TESTS FOR HASH FUNCTIONS:
