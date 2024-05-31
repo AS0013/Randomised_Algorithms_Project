@@ -5,20 +5,15 @@ public class CountSketch {
     public SortedList<BigInteger , int> C {
             get;
     }
-    public long X {
-        get;
-    }
     readonly int l;
-    public CountSketch(CountSketchHash g, IEnumerable<Tuple<ulong, int>> stream) {
+    public CountSketch(CountSketchHash g, int l) {
         this.g = g;
         l = g.l;
-        C = Init(stream);
-        X = EstimateX();
+        C = new SortedList<BigInteger , int>();
     }
 
 
     private SortedList<BigInteger , int> Init(IEnumerable<Tuple<ulong, int>> stream) {
-        SortedList<BigInteger , int> C = new SortedList<BigInteger , int>();
         Console.WriteLine("monke");
         foreach (var tuple in stream) {
         BigInteger hHash = g.CSHash(tuple.Item1).Item1;
@@ -26,17 +21,18 @@ public class CountSketch {
             if (C.ContainsKey(hHash))
             {
                 C[hHash] += sHash;
-                Console.WriteLine("aaa"+C[hHash]);
+                //Console.WriteLine("aaa"+C[hHash]);
             }
             else {
                 C.Add(hHash, sHash);
-                Console.WriteLine("aaa"+C[hHash]);
+                //Console.WriteLine("aaa"+C[hHash]);
             }  
         }
         return C;
     }
 
-    private long EstimateX() {
+    public long EstimateX(IEnumerable<Tuple<ulong, int>> stream) {
+        this.Init(stream);
         long sum = 0;
         foreach (var x in C) {
             sum += (long)Math.Pow(x.Value, 2);
