@@ -1,4 +1,5 @@
-﻿﻿using System.Diagnostics;
+﻿﻿using System.Collections;
+using System.Diagnostics;
 using System.Numerics;
 namespace RadProject
 {
@@ -64,24 +65,51 @@ namespace RadProject
             FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
             // initiate countsketchhash
             CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,l7);
-    
-            for(int i = 1; i <= 1; i++)
-            {
-                               
-                // geneate test stream
-                IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n7, l7);
-                //Console.WriteLine("Stream generated");
-                //hash table
-                ChainHashTable table1 = new ChainHashTable(l7,countSketchHash);
-                long table1_sum = table1.QuadraticSum(stream);
-                Console.WriteLine("multiply shift hash Quadratic sum:" + table1_sum);
+            // initiate results list:
+            List<long> QSTable = new List<long>();
+            // geneate test stream
+            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n7, l7);
+            // Calculate Quadratic Sum
+            ChainHashTable table1 = new ChainHashTable(l7,countSketchHash);
+            long quadraticSum = table1.QuadraticSum(stream);
+            Console.WriteLine("multiply shift hash Quadratic sum:" + quadraticSum );
 
-                //countsketch
+            int testCount=1;
+            for(int i = 1; i <= testCount; i++)
+            {          
+                //countsketch estimate for QS
                 CountSketch countSketch = new CountSketch(countSketchHash,l7);
-                long table1_estim = countSketch.EstimateX(stream);
-                 Console.WriteLine("multiply shift hash Quadratic sum ESTIMATE:" + table1_estim);
+                long QSEstim = countSketch.EstimateX(stream);
+                 Console.WriteLine("Test" + i + ": random values: " + "Estimate: " + QSEstim);
+                QSTable.Add(QSEstim);
             }
-            
+
+            //results list sorted after estimates
+            List<long>QSTableSorted = QSTable;
+            QSTableSorted.Sort();
+
+            //mean square error, Expected value, variance.
+            long meanSquareError = 0;
+            long mean = 0;
+            long variance = 0;
+            long QSEstimSum = 0;
+            foreach (long x in QSTable)
+            {          
+                meanSquareError += (long)Math.Pow(x-quadraticSum,2)/testCount;
+                mean += x;
+            }
+            mean = mean/testCount;
+            foreach (long x in QSTable)
+            {          
+                variance += (long)Math.Pow(mean-x,2)/testCount;
+                QSEstimSum += x;
+            }
+            Console.WriteLine("Mean square error: " +meanSquareError);
+            Console.WriteLine("Anticipated Expected value: " + quadraticSum + " Mean: " + mean);
+            Console.WriteLine("Anticipated variance: " + Math.Round(2*Math.Pow(quadraticSum,2)/Math.Pow(2,l7)) + " Variance: " + variance);
+
+            //mean square error
+
             // //TESTS FOR HASH FUNCTIONS:
             // int testl = 16; 
             // //TEST MULSHIFT HASH:
