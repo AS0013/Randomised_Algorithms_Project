@@ -20,12 +20,14 @@ public static class RandomGenerator
         // filling the byte array with random numbers
         rng.GetBytes(bytes);
 
+        bytes[11] &= 0x7F; // ensuring the most significant bit is 0 so it is a positive number
+
         // currently it is 96 bits, so we need to mask it to a 89 bit number
         BigInteger randomnumber = new BigInteger(bytes);
 
-        BigInteger mask = BigInteger.One << (7); // 96 - 89 = 7
+        BigInteger mask = (BigInteger.One << 89) - 1;
 
-        randomnumber &= ~mask;
+        randomnumber &= mask;
 
         return randomnumber;
     }

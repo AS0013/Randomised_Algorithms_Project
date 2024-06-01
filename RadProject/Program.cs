@@ -67,10 +67,15 @@ namespace RadProject
             foreach (int t in tValues){                
                 // Calculate Quadratic Sum
                 // initiate fourhash
-                BigInteger a0 = BigInteger.Parse("339176588342155335418149214"); // Generated using https://www.random.org/bytes/
-                BigInteger a1 = BigInteger.Parse("545615294102633400098072839"); // Generated using https://www.random.org/bytes/
-                BigInteger a2 = BigInteger.Parse("559758820152785102864000321"); // Generated using https://www.random.org/bytes/
-                BigInteger a3 = BigInteger.Parse("189597206666064321536354137"); // Generated using https://www.random.org/bytes/
+                // BigInteger a0 = BigInteger.Parse("339176588342155335418149214"); // Generated using https://www.random.org/bytes/
+                // BigInteger a1 = BigInteger.Parse("545615294102633400098072839"); // Generated using https://www.random.org/bytes/
+                // BigInteger a2 = BigInteger.Parse("559758820152785102864000321"); // Generated using https://www.random.org/bytes/
+                // BigInteger a3 = BigInteger.Parse("189597206666064321536354137"); // Generated using https://www.random.org/bytes/
+                BigInteger a0 = RandomGenerator.Generate89bitRandomNumber();
+                BigInteger a1 = RandomGenerator.Generate89bitRandomNumber();
+                BigInteger a2 = RandomGenerator.Generate89bitRandomNumber();
+                BigInteger a3 = RandomGenerator.Generate89bitRandomNumber();
+
                 FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
                 // initiate countsketchhash
                 CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,t);
@@ -87,15 +92,24 @@ namespace RadProject
                     //random values for four hash
                     BigInteger[] A = new BigInteger[4];
                     //Console.WriteLine("Random values: ");
-                    for (int j=0; j<A.Length;j++){
-                    byte[] bytes = new byte[12];
-                        random.NextBytes(bytes);
-                        A[j] = new BigInteger(bytes);
-                        A[j]= A[j] & (BigInteger.Pow(2, 89) - 1);
-                        //Console.WriteLine(A[j]);
-                    }
+                    // for (int j=0; j<A.Length;j++){
+                    // byte[] bytes = new byte[12];
+                    //     random.NextBytes(bytes);
+                    //     A[j] = new BigInteger(bytes);
+                    //     A[j]= A[j] & (BigInteger.Pow(2, 89) - 1);
+                    //     //Console.WriteLine(A[j]);
+                    // }
+
+                    // generate the random values for the four hash function
+
+                    BigInteger A0 = RandomGenerator.Generate89bitRandomNumber();
+                    BigInteger A1 = RandomGenerator.Generate89bitRandomNumber();
+                    BigInteger A2 = RandomGenerator.Generate89bitRandomNumber();
+                    BigInteger A3 = RandomGenerator.Generate89bitRandomNumber();
+
                     //hash functions:
-                    FourHashFunction fourHash= new FourHashFunction(A[0],A[1],A[2],A[3]);
+                    // FourHashFunction fourHash= new FourHashFunction(A[0],A[1],A[2],A[3]);
+                    FourHashFunction fourHash= new FourHashFunction(A0,A1,A2,A3);
                     CountSketchHash CShash = new CountSketchHash(fourHash ,t);
                     //countsketch estimate for QS
                     var watch = new Stopwatch();
@@ -106,7 +120,8 @@ namespace RadProject
                     watch.Stop();
                     long time = watch.ElapsedMilliseconds;
                     avgRuntime +=time;
-                    Console.WriteLine("Test" + i + ": random values: " + A[0] + " , " + A[1] + " , " +A[2] + " , " + A[3] +" Estimate: " + QSEstim + "Time taken (ms):" + time);
+                    // Console.WriteLine("Test" + i + ": random values: " + A[0] + " , " + A[1] + " , " +A[2] + " , " + A[3] +" Estimate: " + QSEstim + "Time taken (ms):" + time);
+                    Console.WriteLine("Test" + i + ": random values: " + A0 + " , " + A1 + " , " + A2 + " , " + A3 +" Estimate: " + QSEstim + "Time taken (ms):" + time);
                     QSTable.Add(QSEstim);
                 }
                 //average time
