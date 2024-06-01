@@ -54,112 +54,127 @@ namespace RadProject
                
             // }
 
-            //OPGAVE 7:
-            Console.WriteLine("Opgave 7:");
-
-            int max7 = 17;
-            int n7 = (int)Math.Pow(2,max7);
-            int l7 = 13;
+            //OPGAVE 7 & 8:
+            Console.WriteLine("Opgave 7 & 8:");
+            int l7 = 17;
             // geneate test stream
+            int max7 = 18;
+            int n7 = (int)Math.Pow(2,max7);
             IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n7, l7);
             
-            // Calculate Quadratic Sum
-            // initiate fourhash
-            BigInteger a0 = BigInteger.Parse("339176588342155335418149214"); // Generated using https://www.random.org/bytes/
-            BigInteger a1 = BigInteger.Parse("545615294102633400098072839"); // Generated using https://www.random.org/bytes/
-            BigInteger a2 = BigInteger.Parse("559758820152785102864000321"); // Generated using https://www.random.org/bytes/
-            BigInteger a3 = BigInteger.Parse("189597206666064321536354137"); // Generated using https://www.random.org/bytes/
-            FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
-            // initiate countsketchhash
-            CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,l7);
-            ChainHashTable table1 = new ChainHashTable(l7,countSketchHash);
-            long quadraticSum = table1.QuadraticSum(stream);
-            Console.WriteLine("multiply shift hash Quadratic sum:" + quadraticSum );
-            // initiate results list for estimates:
-            List<long> QSTable = new List<long>();
-
-            int testCount=100;
-            for(int i = 1; i <= testCount; i++)
-            {   
-                //random values for four hash
-                BigInteger[] A = new BigInteger[4];
-                //Console.WriteLine("Random values: ");
-                for (int j=0; j<A.Length;j++){
-                byte[] bytes = new byte[12];
-                    new Random().NextBytes(bytes);
-                    A[j] = new BigInteger(bytes);
-                    A[j]= A[j] & (BigInteger.Pow(2, 89) - 1);
-                    //Console.WriteLine(A[j]);
+            //repeat for m = 2^9,2^12.2^16
+            int[] tValues = {8,12,16};
+            foreach (int t in tValues){                
+                // Calculate Quadratic Sum
+                // initiate fourhash
+                BigInteger a0 = BigInteger.Parse("339176588342155335418149214"); // Generated using https://www.random.org/bytes/
+                BigInteger a1 = BigInteger.Parse("545615294102633400098072839"); // Generated using https://www.random.org/bytes/
+                BigInteger a2 = BigInteger.Parse("559758820152785102864000321"); // Generated using https://www.random.org/bytes/
+                BigInteger a3 = BigInteger.Parse("189597206666064321536354137"); // Generated using https://www.random.org/bytes/
+                FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
+                // initiate countsketchhash
+                CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,t);
+                ChainHashTable table1 = new ChainHashTable(t,countSketchHash);
+                long quadraticSum = table1.QuadraticSum(stream);
+                Console.WriteLine("OPG8 Experiment: Number of elements n : 2^" +max7+"  Number of different elements 2^l: 2^" +l7+ " Range m = 2^t of hash function h: 2^" + t+ " Quadratic sum:" + quadraticSum );
+                // initiate results list for estimates:
+                List<long> QSTable = new List<long>();
+                long avgRuntime = 0;
+                int testCount=100;
+                for(int i = 1; i <= testCount; i++)
+                {   
+                    Random random = new Random();  
+                    //random values for four hash
+                    BigInteger[] A = new BigInteger[4];
+                    //Console.WriteLine("Random values: ");
+                    for (int j=0; j<A.Length;j++){
+                    byte[] bytes = new byte[12];
+                        random.NextBytes(bytes);
+                        A[j] = new BigInteger(bytes);
+                        A[j]= A[j] & (BigInteger.Pow(2, 89) - 1);
+                        //Console.WriteLine(A[j]);
+                    }
+                    //hash functions:
+                    FourHashFunction fourHash= new FourHashFunction(A[0],A[1],A[2],A[3]);
+                    CountSketchHash CShash = new CountSketchHash(fourHash ,t);
+                    //countsketch estimate for QS
+                    var watch = new Stopwatch();
+                    watch.Reset();
+                    watch.Start();
+                    CountSketch countSketch = new CountSketch(CShash,t);
+                    long QSEstim = countSketch.EstimateX(stream);
+                    watch.Stop();
+                    long time = watch.ElapsedMilliseconds;
+                    avgRuntime +=time;
+                    Console.WriteLine("Test" + i + ": random values: " + A[0] + " , " + A[1] + " , " +A[2] + " , " + A[3] +" Estimate: " + QSEstim + "Time taken (ms):" + time);
+                    QSTable.Add(QSEstim);
                 }
-                //hash functions:
-                FourHashFunction fourHash= new FourHashFunction(A[0],A[1],A[2],A[3]);
-                CountSketchHash CShash = new CountSketchHash(fourHash ,l7);
-                //countsketch estimate for QS
-                CountSketch countSketch = new CountSketch(CShash,l7);
-                long QSEstim = countSketch.EstimateX(stream);
-                 Console.WriteLine("Test" + i + ": random values: " + "Estimate: " + QSEstim);
-                QSTable.Add(QSEstim);
-            }
+                //average time
+                avgRuntime = avgRuntime/testCount;
 
-            //results list sorted after estimates
-            List<long>QSTableSorted = QSTable;
-            QSTableSorted.Sort();
+                //results list sorted after estimates
+                List<long>QSTableSorted = QSTable;
+                QSTableSorted.Sort();
 
-            //mean square error, Expected value, variance.
-            long meanSquareError = 0;
-            long mean = 0;
-            long variance = 0;
-            long QSEstimSum = 0;
-            foreach (long x in QSTable)
-            {          
-                meanSquareError += (long)Math.Pow(x-quadraticSum,2)/testCount;
-                mean += x;
-            }
-            mean = mean/testCount;
-            foreach (long x in QSTable)
-            {          
-                variance += (long)Math.Pow(mean-x,2)/testCount;
-                QSEstimSum += x;
-            }
-            Console.WriteLine("Mean square error: " +meanSquareError);
-            Console.WriteLine("Anticipated Expected value: " + quadraticSum + " Mean: " + mean);
-            Console.WriteLine("Anticipated variance: " + Math.Round(2*Math.Pow(quadraticSum,2)/Math.Pow(2,l7)) + " Variance: " + variance);
+                //mean square error, Expected value, variance.
+                long meanSquareError = 0;
+                long mean = 0;
+                long variance = 0;
+                long QSEstimSum = 0;
+                foreach (long x in QSTable)
+                {          
+                    meanSquareError += (long)Math.Pow(x-quadraticSum,2)/testCount;
+                    mean += x;
+                }
+                mean = mean/testCount;
+                foreach (long x in QSTable)
+                {          
+                    variance += (long)Math.Pow(mean-x,2)/testCount;
+                    QSEstimSum += x;
+                }
+                Console.WriteLine("Average Runtime: " +avgRuntime);
+                Console.WriteLine("Mean square error: " +meanSquareError);
+                Console.WriteLine("Anticipated Expected value: " + quadraticSum + " Mean: " + mean);
+                Console.WriteLine("Anticipated variance: " + Math.Round(2*Math.Pow(quadraticSum,2)/Math.Pow(2,t)) + " Variance: " + variance);
 
-            // groups and median:
-            // divide into groups:
-            List<List<long>> QSTableGroups = new List<List<long>>();
-            for (int i = 0; i < (testCount-1)/11; i++)
-            {
-                QSTableGroups.Add(QSTable.Skip(i * 11).Take(11).ToList());
-            }
-            //medians of each group:
-            List<long> QSTablemedians = new List<long>();
-            foreach (var group in QSTableGroups)
-            {
-                group.Sort();
-                long median = group[group.Count / 2];
-                QSTablemedians.Add(median);
-            }
-            QSTablemedians.Sort();
+                // groups and median:
+                // divide into groups:
+                List<List<long>> QSTableGroups = new List<List<long>>();
+                for (int i = 0; i < (testCount-1)/11; i++)
+                {
+                    QSTableGroups.Add(QSTable.Skip(i * 11).Take(11).ToList());
+                }
+                //medians of each group:
+                List<long> QSTablemedians = new List<long>();
+                foreach (var group in QSTableGroups)
+                {
+                    group.Sort();
+                    long median = group[group.Count / 2];
+                    QSTablemedians.Add(median);
+                }
+                QSTablemedians.Sort();
 
-            // Create a Plot object
-            var plt = new ScottPlot.Plot();
-            // Add a scatter plot
-            plt.Add.Line(0, quadraticSum,100, quadraticSum);
-            List<int> numbers = Enumerable.Range(1, 100).ToList();
-            plt.Add.ScatterPoints(numbers, QSTable);
-            plt.Axes.SetLimits(0, 100, 220000, 260000);
-            plt.SavePng("100ResultsPlot.png", 1024, 768);
-            Console.WriteLine("100 points Plot saved in directory");
+                // Create a Plot object
+                var plt = new ScottPlot.Plot();
+                // Add a scatter plot
+                plt.Add.Line(0, quadraticSum,100, quadraticSum);
+                List<int> numbers = Enumerable.Range(1, 100).ToList();
+                plt.Add.ScatterPoints(numbers, QSTable);
+                plt.Axes.SetLimits(0, 100, 220000, 260000);
+                string filepath1=$"100ResultsPlotT{t}.png";
+                plt.SavePng(filepath1, 1024, 768);
+                Console.WriteLine("100 points Plot saved in directory");
 
-            var plt2 = new ScottPlot.Plot();
-            // Add a scatter plot
-            plt2.Add.Line(0, quadraticSum,10, quadraticSum);
-            List<int> numbers2 = Enumerable.Range(1, 10).ToList();
-            plt2.Add.ScatterPoints(numbers2, QSTablemedians);
-            plt2.Axes.SetLimits(0, 10, 220000, 260000);
-            plt2.SavePng("MediansPlot.png", 1024, 768);
-            Console.WriteLine("medians Plot saved in directory");
+                var plt2 = new ScottPlot.Plot();
+                // Add a scatter plot
+                plt2.Add.Line(0, quadraticSum,10, quadraticSum);
+                List<int> numbers2 = Enumerable.Range(1, 10).ToList();
+                plt2.Add.ScatterPoints(numbers2, QSTablemedians);
+                plt2.Axes.SetLimits(0, 10, 220000, 260000);
+                string filepath2=$"MediansPlotT{t}.png";
+                plt2.SavePng(filepath2, 1024, 768);
+                Console.WriteLine("medians Plot saved in directory");
+            }
             // //TESTS FOR HASH FUNCTIONS:
             // int testl = 16; 
             // //TEST MULSHIFT HASH:
