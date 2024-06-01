@@ -88,9 +88,9 @@ namespace RadProject
                 int testCount=100;
                 for(int i = 1; i <= testCount; i++)
                 {   
-                    Random random = new Random();  
+                    // Random random = new Random();  
                     //random values for four hash
-                    BigInteger[] A = new BigInteger[4];
+                    // BigInteger[] A = new BigInteger[4];
                     //Console.WriteLine("Random values: ");
                     // for (int j=0; j<A.Length;j++){
                     // byte[] bytes = new byte[12];
