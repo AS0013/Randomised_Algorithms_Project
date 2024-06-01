@@ -10,49 +10,93 @@ namespace RadProject
     {
         static void Main(string[] args)
         {
-            // //OPGAVE 3:
-            // int max = 18;
-            // int n = (int)Math.Pow(2,max);
-            // Console.WriteLine("Opgave 3 quadratic sum:");
-            // Console.WriteLine("VALUE OF n: n = ", n);
-            // int[] lValues = {2,4,6,8,10,12,14,16,18};
-            // foreach (int l in lValues)
-            // {
-            //     Console.WriteLine("TEST WITH l = " +l);
-            //     //set parameters for Multiply shift
-            //     ulong a = 1470686635362862957; // Generated using https://www.random.org/bytes/
-            //     MulShiftHash mulShiftHash = new MulShiftHash(a,l);
-            //     //set parameters for multiplymodprime
-            //     BigInteger b = BigInteger.Parse("595679239539172459088339861");
-            //     BigInteger c = BigInteger.Parse("165641934261307971454905931");
-            //     MulModPriHash MulModPriHash = new MulModPriHash(b,c,l);
+            //OPGAVE 1:
+                int max1=16;
+                int n1=(int)Math.Pow(2,max1);
+                int l1=16;
+                ulong d1 = 1470686635362862957; // Generated using https://www.random.org/bytes/
+                MulShiftHash mulShiftHash1 = new MulShiftHash(d1,l1);
+                //set parameters for multiplymodprime
+                BigInteger b1 = BigInteger.Parse("595679239539172459088339861");
+                BigInteger c1 = BigInteger.Parse("165641934261307971454905931");
+                MulModPriHash mulModPriHash1 = new MulModPriHash(b1,c1,l1);
 
                 
-            //     // geneate test stream
-            //     IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n, l);
-            //     //Console.WriteLine("Stream generated");
-            //     //initiate stopwatch
-            //     var watch = new Stopwatch();
-            //     ChainHashTable table1 = new ChainHashTable(l,mulShiftHash);
-            //     ChainHashTable table2 = new ChainHashTable(l,MulModPriHash);
+                // geneate test stream
+                IEnumerable<Tuple<ulong, int>> stream1 = StreamTest.CreateStream(n1, l1);
+                //Console.WriteLine("Stream generated");
+                //initiate stopwatch
+                var watch1 = new Stopwatch();
+
+                //multiply shift runtime
+                watch1.Reset();
+                watch1.Start();
+                ulong shiftsum=0;
+                foreach (Tuple<ulong, int> x in stream1){
+                    shiftsum += mulShiftHash1.Hash(x.Item1);
+                }
+                watch1.Stop();
+                long time1 = watch1.ElapsedMilliseconds;
+                Console.WriteLine("Opgave 1:");
+                Console.WriteLine("multiply shift sum: "+shiftsum+ " hash time taken (ms):" + time1);
+
+
+                //multiply mod prime runtime
+                watch1.Reset();
+                watch1.Start();
+                ulong modsum=0;
+                foreach (Tuple<ulong, int> x in stream1){
+                    modsum += mulModPriHash1.Hash(x.Item1);
+                }
+                watch1.Stop();
+                watch1.Stop();
+                long time2 = watch1.ElapsedMilliseconds;
+                Console.WriteLine("multiply mod prime time taken (ms):" + time2);
+                Console.WriteLine("Time difference: " + Math.Abs(time2-time1));
+
+            //OPGAVE 3:
+            int max = 18;
+            int n = (int)Math.Pow(2,max);
+            Console.WriteLine("Opgave 3 quadratic sum:");
+            Console.WriteLine("VALUE OF n: n = ", n);
+            int[] lValues = {2,4,6,8,10,12,14,16,18};
+            foreach (int l in lValues)
+            {
+                Console.WriteLine("TEST WITH l = " +l);
+                //set parameters for Multiply shift
+                ulong a = 1470686635362862957; // Generated using https://www.random.org/bytes/
+                MulShiftHash mulShiftHash = new MulShiftHash(a,l);
+                //set parameters for multiplymodprime
+                BigInteger b = BigInteger.Parse("595679239539172459088339861");
+                BigInteger c = BigInteger.Parse("165641934261307971454905931");
+                MulModPriHash MulModPriHash = new MulModPriHash(b,c,l);
+
                 
-            //     watch.Reset();
-            //     watch.Start();
-            //     long table1_sum = table1.QuadraticSum(stream);
-            //     Console.WriteLine("multiply shift hash Quadratic sum:" + table1_sum);
-            //     watch.Stop();
-            //     long time3 = watch.ElapsedMilliseconds;
-            //     Console.WriteLine("multiply shift hash time taken (ms):" + time3);
-            //     watch.Reset();
-            //     watch.Start();
-            //     long table2_sum = table2.QuadraticSum(stream);
-            //     Console.WriteLine("multiply mod prime Quadratic sum:" + table2_sum);
-            //     watch.Stop();
-            //     long time4 = watch.ElapsedMilliseconds;
-            //     Console.WriteLine("multiply mod prime time taken (ms):" + time4);
-            //     Console.WriteLine("Time difference: " + Math.Abs(time4-time3));
+                // geneate test stream
+                IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n, l);
+                //Console.WriteLine("Stream generated");
+                //initiate stopwatch
+                var watch = new Stopwatch();
+                ChainHashTable table1 = new ChainHashTable(l,mulShiftHash);
+                ChainHashTable table2 = new ChainHashTable(l,MulModPriHash);
+                
+                watch.Reset();
+                watch.Start();
+                long table1_sum = table1.QuadraticSum(stream);
+                Console.WriteLine("multiply shift hash Quadratic sum:" + table1_sum);
+                watch.Stop();
+                long time3 = watch.ElapsedMilliseconds;
+                Console.WriteLine("multiply shift hash time taken (ms):" + time3);
+                watch.Reset();
+                watch.Start();
+                long table2_sum = table2.QuadraticSum(stream);
+                Console.WriteLine("multiply mod prime Quadratic sum:" + table2_sum);
+                watch.Stop();
+                long time4 = watch.ElapsedMilliseconds;
+                Console.WriteLine("multiply mod prime time taken (ms):" + time4);
+                Console.WriteLine("Time difference: " + Math.Abs(time4-time3));
                
-            // }
+            }
 
             //OPGAVE 7 & 8:
             Console.WriteLine("Opgave 7 & 8:");
@@ -60,7 +104,7 @@ namespace RadProject
             // geneate test stream
             int max7 = 18;
             int n7 = (int)Math.Pow(2,max7);
-            IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n7, l7);
+            IEnumerable<Tuple<ulong, int>> stream7 = StreamTest.CreateStream(n7, l7);
             
             //repeat for m = 2^9,2^12.2^16
             int[] tValues = {8,12,16};
@@ -75,7 +119,7 @@ namespace RadProject
                 // initiate countsketchhash
                 CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,t);
                 ChainHashTable table1 = new ChainHashTable(t,countSketchHash);
-                long quadraticSum = table1.QuadraticSum(stream);
+                long quadraticSum = table1.QuadraticSum(stream7);
                 Console.WriteLine("OPG8 Experiment: Number of elements n : 2^" +max7+"  Number of different elements 2^l: 2^" +l7+ " Range m = 2^t of hash function h: 2^" + t+ " Quadratic sum:" + quadraticSum );
                 // initiate results list for estimates:
                 List<long> QSTable = new List<long>();
@@ -98,13 +142,13 @@ namespace RadProject
                     FourHashFunction fourHash= new FourHashFunction(A[0],A[1],A[2],A[3]);
                     CountSketchHash CShash = new CountSketchHash(fourHash ,t);
                     //countsketch estimate for QS
-                    var watch = new Stopwatch();
-                    watch.Reset();
-                    watch.Start();
+                    var watch7 = new Stopwatch();
+                    watch7.Reset();
+                    watch7.Start();
                     CountSketch countSketch = new CountSketch(CShash,t);
-                    long QSEstim = countSketch.EstimateX(stream);
-                    watch.Stop();
-                    long time = watch.ElapsedMilliseconds;
+                    long QSEstim = countSketch.EstimateX(stream7);
+                    watch7.Stop();
+                    long time = watch7.ElapsedMilliseconds;
                     avgRuntime +=time;
                     Console.WriteLine("Test" + i + ": random values: " + A[0] + " , " + A[1] + " , " +A[2] + " , " + A[3] +" Estimate: " + QSEstim + "Time taken (ms):" + time);
                     QSTable.Add(QSEstim);
@@ -179,6 +223,7 @@ namespace RadProject
                 plt2.SavePng(filepath2, 1024, 768);
                 Console.WriteLine("medians Plot saved in directory");
             }
+
             // //TESTS FOR HASH FUNCTIONS:
             // int testl = 16; 
             // //TEST MULSHIFT HASH:
