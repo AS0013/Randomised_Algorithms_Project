@@ -123,15 +123,17 @@ namespace RadProject
                 long QSEstimSum = 0;
                 foreach (long x in QSTable)
                 {          
-                    meanSquareError += (long)Math.Pow(x-quadraticSum,2)/testCount;
+                    meanSquareError += (long)Math.Pow(x - quadraticSum,2);
                     mean += x;
                 }
+                meanSquareError = meanSquareError/testCount;
                 mean = mean/testCount;
                 foreach (long x in QSTable)
                 {          
-                    variance += (long)Math.Pow(mean-x,2)/testCount;
+                    variance += (long)Math.Pow(mean-x,2);
                     QSEstimSum += x;
                 }
+                variance = variance/testCount;
                 Console.WriteLine("Average Runtime: " +avgRuntime);
                 Console.WriteLine("Mean square error: " +meanSquareError);
                 Console.WriteLine("Anticipated Expected value: " + quadraticSum + " Mean: " + mean);
@@ -148,11 +150,13 @@ namespace RadProject
                 List<long> QSTablemedians = new List<long>();
                 foreach (var group in QSTableGroups)
                 {
+                    long median;
                     group.Sort();
-                    long median = group[group.Count / 2];
+                    median = group[group.Count / 2];
                     QSTablemedians.Add(median);
                 }
                 QSTablemedians.Sort();
+                Console.WriteLine("Medians: " + string.Join(", ", QSTablemedians));
 
                 // Create a Plot object
                 var plt = new ScottPlot.Plot();
@@ -160,7 +164,7 @@ namespace RadProject
                 plt.Add.Line(0, quadraticSum,100, quadraticSum);
                 List<int> numbers = Enumerable.Range(1, 100).ToList();
                 plt.Add.ScatterPoints(numbers, QSTable);
-                plt.Axes.SetLimits(0, 100, 220000, 260000);
+                plt.Axes.SetLimits(0, 100, quadraticSum*0.3, quadraticSum*1.3);
                 string filepath1=$"100ResultsPlotT{t}.png";
                 plt.SavePng(filepath1, 1024, 768);
                 Console.WriteLine("100 points Plot saved in directory");
@@ -168,9 +172,9 @@ namespace RadProject
                 var plt2 = new ScottPlot.Plot();
                 // Add a scatter plot
                 plt2.Add.Line(0, quadraticSum,10, quadraticSum);
-                List<int> numbers2 = Enumerable.Range(1, 10).ToList();
+                List<int> numbers2 = Enumerable.Range(1, 9).ToList();
                 plt2.Add.ScatterPoints(numbers2, QSTablemedians);
-                plt2.Axes.SetLimits(0, 10, 220000, 260000);
+                plt2.Axes.SetLimits(0, 10, quadraticSum*0.3, quadraticSum*1.3);
                 string filepath2=$"MediansPlotT{t}.png";
                 plt2.SavePng(filepath2, 1024, 768);
                 Console.WriteLine("medians Plot saved in directory");

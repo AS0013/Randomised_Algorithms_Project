@@ -23,7 +23,7 @@ public class CountSketch {
                     //Console.WriteLine("aaa"+C[hHash]);
                 }
                 else {
-                    C.Add(hHash, sHash);
+                    C.Add(hHash, sHash*tuple.Item2);
                     //Console.WriteLine("aaa"+C[hHash]);
                 }  
         }
