@@ -49,9 +49,8 @@ namespace RadProject
                     modsum += mulModPriHash1.Hash(x.Item1);
                 }
                 watch1.Stop();
-                watch1.Stop();
                 long time2 = watch1.ElapsedMilliseconds;
-                Console.WriteLine("multiply mod prime time taken (ms):" + time2);
+                Console.WriteLine("multiply mod prime  sum: "+modsum+ " hash time taken (ms): "+ time2);
                 Console.WriteLine("Time difference: " + Math.Abs(time2-time1));
 
             //OPGAVE 3:
@@ -59,7 +58,7 @@ namespace RadProject
             int n = (int)Math.Pow(2,max);
             Console.WriteLine("Opgave 3 quadratic sum:");
             Console.WriteLine("VALUE OF n: n = ", n);
-            int[] lValues = {2,4,6,8,10,12,14,16,18};
+            int[] lValues = {2,4,6,8,10,12,14,16,17,18};
             foreach (int l in lValues)
             {
                 Console.WriteLine("TEST WITH l = " +l);
@@ -83,15 +82,15 @@ namespace RadProject
                 watch.Reset();
                 watch.Start();
                 long table1_sum = table1.QuadraticSum(stream);
-                Console.WriteLine("multiply shift hash Quadratic sum:" + table1_sum);
                 watch.Stop();
+                Console.WriteLine("multiply shift hash Quadratic sum:" + table1_sum);
                 long time3 = watch.ElapsedMilliseconds;
                 Console.WriteLine("multiply shift hash time taken (ms):" + time3);
                 watch.Reset();
                 watch.Start();
                 long table2_sum = table2.QuadraticSum(stream);
-                Console.WriteLine("multiply mod prime Quadratic sum:" + table2_sum);
                 watch.Stop();
+                Console.WriteLine("multiply mod prime Quadratic sum:" + table2_sum);
                 long time4 = watch.ElapsedMilliseconds;
                 Console.WriteLine("multiply mod prime time taken (ms):" + time4);
                 Console.WriteLine("Time difference: " + Math.Abs(time4-time3));
@@ -143,9 +142,9 @@ namespace RadProject
                     CountSketchHash CShash = new CountSketchHash(fourHash ,t);
                     //countsketch estimate for QS
                     var watch7 = new Stopwatch();
+                    CountSketch countSketch = new CountSketch(CShash,t);
                     watch7.Reset();
                     watch7.Start();
-                    CountSketch countSketch = new CountSketch(CShash,t);
                     long QSEstim = countSketch.EstimateX(stream7);
                     watch7.Stop();
                     long time = watch7.ElapsedMilliseconds;

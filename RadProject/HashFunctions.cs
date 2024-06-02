@@ -52,11 +52,6 @@ public class MulModPriHash : HashFunction{
         return hash;
     }
 
-    // internal string MultiplyShift(long item1)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
 }
 
 public class FourHashFunction{
@@ -113,30 +108,13 @@ public class CountSketchHash : HashFunction{
         this.l = l;
     }
 
-    public (BigInteger,int) CSHash(ulong x)
-    {
-        //h(x)
-        BigInteger h = g.Hash(x) & ((1UL<<l)-1);
-        //s(x)
-        int s = (int)(1-2*((BigInteger)g.Hash(x) >> (b-1)));
-        return (h,s);
-    }
-}
-
-public class CountSketchHashX : HashFunction{
-    HashFunction g;
-    int b = 89;
-    public CountSketchHashX (HashFunction g, int l){
-        this.g = g;
-        this.l = l;
-    }
-
     public (ulong,int) CSHash(ulong x)
     {
         //h(x)
-        ulong h = g.Hash(x) & ((1UL<<l)-1);
+        //Console.WriteLine("adafafddsf " + (g.Hash(x) & ((1UL<<l)-1)));
+        ulong h = (ulong)(g.Hash(x) & ((1UL<<l)-1));
         //s(x)
-        int s = (int)(1 -2*((long)g.Hash(x) >> (b-1)));
+        int s = (int)(1-2*((BigInteger)g.Hash(x) >> (b-1)));
         return (h,s);
     }
 }

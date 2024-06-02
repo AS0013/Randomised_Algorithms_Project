@@ -2,20 +2,20 @@ namespace RadProject;
 using System.Numerics;
 public class CountSketch {
     readonly CountSketchHash g;
-    public SortedList<BigInteger , int> C {
+    public SortedList<ulong , int> C {
             get;
     }
     readonly int l;
     public CountSketch(CountSketchHash g, int l) {
         this.g = g;
         l = g.l;
-        C = new SortedList<BigInteger , int>();
+        C = new SortedList<ulong , int>();
     }
 
 
-    private SortedList<BigInteger , int> Init(IEnumerable<Tuple<ulong, int>> stream) {
+    private SortedList<ulong , int> Init(IEnumerable<Tuple<ulong, int>> stream) {
         foreach (var tuple in stream) {
-            BigInteger hHash = g.CSHash(tuple.Item1).Item1;
+            ulong hHash = g.CSHash(tuple.Item1).Item1;
             int sHash = g.CSHash(tuple.Item1).Item2;
                 if (C.ContainsKey(hHash))
                 {
