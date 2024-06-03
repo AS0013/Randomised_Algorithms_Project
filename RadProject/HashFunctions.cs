@@ -6,10 +6,6 @@ public class HashFunction{
         return x;
     }
 
-    // public virtual BigInteger Hash(ulong){
-    //     return x;
-    // }
-
 }
 public class MulShiftHash : HashFunction {
     ulong a;
@@ -21,7 +17,6 @@ public class MulShiftHash : HashFunction {
         ulong low;
         ulong hash = Math.BigMul(a,x, out low);
         ulong hashed = low >> (64 - l);
-        // Console.WriteLine("input: " + x + " hashed: " + hashed); 
         return hashed;
     }
 }
@@ -37,17 +32,12 @@ public class MulModPriHash : HashFunction{
     public override ulong Hash(ulong x){
         BigInteger p = BigInteger.Pow(2,89)-1;
         BigInteger x_big = new BigInteger(x);
-        // Console.WriteLine("a " + (BigInteger.Multiply(a,x_big) + b));
         BigInteger y =  ((BigInteger.Multiply(a,x_big) + b) & p) + ((BigInteger.Multiply(a,x_big) + b) >> 89);
 
         if (y>=p){
             y -= p;
         }
-        // Console.WriteLine("y " + (y));
-        // long hash = (y&2^l) + (y>>l);
         ulong hash = (ulong)(y & ((1UL << 16) -1));
-        // Console.WriteLine("hash " + (hash));
-        // Console.WriteLine("input: " + x + " hashed: " + hash); 
 
         return hash;
     }
@@ -78,8 +68,6 @@ public class FourHashFunction{
 
         BigInteger y = a_values[3];
 
-        // ulong k = 4;
-
         for (int i = 2; i >= 0; i--)
         {
             BigInteger temp = BigInteger.Multiply(y, x_big);
@@ -91,16 +79,6 @@ public class FourHashFunction{
         if (y>=p){
             y -= p;
         }
-
-        // ulong y_k = (ulong)( y & (k-1));
-
-//         Console.WriteLine("Y: " + y + " X: " + x);
-        
-//         return y;
-
-        // ulong y_k = (ulong)( y & (k-1));
-
-        // Console.WriteLine("Y: " + y + " X: " + x);
         
         return y;
     
@@ -117,7 +95,6 @@ public class CountSketchHash : HashFunction{
     public (ulong,int) CSHash(ulong x)
     {
         //h(x)
-        //Console.WriteLine("adafafddsf " + (g.Hash(x) & ((1UL<<l)-1)));
         ulong h = (ulong)(g.Hash(x) & ((1UL<<l)-1));
         //s(x)
         int s = (int)(1-2*((BigInteger)g.Hash(x) >> (b-1)));

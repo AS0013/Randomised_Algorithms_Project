@@ -6,10 +6,8 @@ public class CountSketch {
     public SortedList<ulong , int> C {
             get;
     }
-    readonly int l;
     public CountSketch(CountSketchHash g, int l) {
         this.g = g;
-        l = g.l;
         C = new SortedList<ulong , int>();
     }
 
@@ -21,11 +19,9 @@ public class CountSketch {
                 if (C.ContainsKey(hHash))
                 {
                     C[hHash] += sHash*tuple.Item2;
-                    //Console.WriteLine("aaa"+C[hHash]);
                 }
                 else {
                     C.Add(hHash, sHash*tuple.Item2);
-                    //Console.WriteLine("aaa"+C[hHash]);
                 }  
         }
         return C;

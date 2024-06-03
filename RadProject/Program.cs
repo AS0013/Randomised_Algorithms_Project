@@ -73,7 +73,6 @@ namespace RadProject
                 
                 // geneate test stream
                 IEnumerable<Tuple<ulong, int>> stream = StreamTest.CreateStream(n, l);
-                //Console.WriteLine("Stream generated");
                 //initiate stopwatch
                 var watch = new Stopwatch();
                 ChainHashTable table1 = new ChainHashTable(l,mulShiftHash);
@@ -218,47 +217,6 @@ namespace RadProject
                 plt2.SavePng(filepath2, 1024, 768);
                 Console.WriteLine("medians Plot saved in directory");
             }
-
-            // //TESTS FOR HASH FUNCTIONS:
-            // int testl = 16; 
-            // //TEST MULSHIFT HASH:
-            // // 2^30 *2^30 >> 48 = 4096
-            // ulong a = 1<<30; 
-            // MulShiftHash mulShiftTest = new MulShiftHash(a,testl);
-            // Console.WriteLine(mulShiftTest.Hash(1<<30));
-            // //TEST MULMODPRI HASH:
-            // // ((559*300 + 156) mod (2^89-1)) mod 2^16 = 3674
-            
-            // BigInteger aTest1 = BigInteger.Parse("559");
-            // BigInteger bTest1 = BigInteger.Parse("156");
-            // MulModPriHash mulModPriTest1 = new MulModPriHash(aTest1,bTest1,testl);
-            // Console.WriteLine(mulModPriTest1.Hash(300));
-
-            // // 2^89 mod (2^89-1)) mod 2^16 = 1
-            // BigInteger aTest2 = BigInteger.Pow(2,89);
-            // BigInteger bTest2 = BigInteger.Parse("0");
-            // MulModPriHash mulModPriTest2 = new MulModPriHash(aTest2,bTest2,testl);
-            // Console.WriteLine(mulModPriTest2.Hash(1));
-
-            // //TEST FOUR HASH
-            // // (33+54*200+55*200^2+18*200^3) mod (2^89-1) = 146210833
-            // BigInteger a0 = BigInteger.Parse("33"); 
-            // BigInteger a1 = BigInteger.Parse("54");
-            // BigInteger a2 = BigInteger.Parse("55"); 
-            // BigInteger a3 = BigInteger.Parse("18"); 
-
-            // FourHashFunction fourhashTest = new FourHashFunction(a0,a1,a2,a3);
-            // Console.WriteLine(fourhashTest.Hash(200));
-
-            // // test countsketchhash
-            // //g(x): (33+54*20+55*20^2+18*20^3) mod (2^89-1) = 167113
-            // ulong input = 20;
-            // FourHashFunction fourhash = new FourHashFunction(a0,a1,a2,a3);
-            // Console.WriteLine("TEST "+fourhash.Hash(input));
-            // //h(x): 167113 mod 2^16 = 36041
-            // //s(x): 1-2* floor(36041/2^89) = 1
-            // CountSketchHash G = new CountSketchHash(fourhash ,testl);
-            // Console.WriteLine("TEST COUNTSKETCH:" + G.CSHash(input));
         }
     }
 }
