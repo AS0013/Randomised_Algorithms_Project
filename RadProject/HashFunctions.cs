@@ -94,6 +94,12 @@ public class FourHashFunction{
 
         // ulong y_k = (ulong)( y & (k-1));
 
+//         Console.WriteLine("Y: " + y + " X: " + x);
+        
+//         return y;
+
+        // ulong y_k = (ulong)( y & (k-1));
+
         // Console.WriteLine("Y: " + y + " X: " + x);
         
         return y;
