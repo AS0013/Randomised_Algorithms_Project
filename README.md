@@ -5,4 +5,4 @@ To run the project, first build it by navigating to the directory ***RadProject*
 The program can then be run using the following command in the same directory:
 > dotnet run
 
-The program runs the test described in Task 1, 7 and 8 in the assignment text, and prints the results to the console.
+The program runs the test described in Task 1, 3, 7, and 8 in the assignment text, and prints the results to the console.
