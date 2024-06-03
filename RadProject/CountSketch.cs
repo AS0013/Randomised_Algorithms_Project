@@ -1,38 +1,42 @@
-namespace RadProject;
 
+namespace RadProject;
+using System.Numerics;
 public class CountSketch {
     readonly CountSketchHash g;
-    public long[] C {
+    public SortedList<ulong , int> C {
             get;
     }
-    public long X {
-        get;
-    }
     readonly int l;
-    public CountSketch(CountSketchHash g, IEnumerable<Tuple<ulong, int>> stream) {
+    public CountSketch(CountSketchHash g, int l) {
         this.g = g;
         l = g.l;
-        C = Init(stream);
-        X = EstimateX();
+        C = new SortedList<ulong , int>();
     }
 
 
-    private long[] Init(IEnumerable<Tuple<ulong, int>> stream) {
-        long[] C = new long[(int)Math.Pow(2, l)];
+    private SortedList<ulong , int> Init(IEnumerable<Tuple<ulong, int>> stream) {
         foreach (var tuple in stream) {
             ulong hHash = g.CSHash(tuple.Item1).Item1;
-            long sHash = g.CSHash(tuple.Item1).Item2;
-            C[hHash] += sHash;
+            int sHash = g.CSHash(tuple.Item1).Item2;
+                if (C.ContainsKey(hHash))
+                {
+                    C[hHash] += sHash*tuple.Item2;
+                    //Console.WriteLine("aaa"+C[hHash]);
+                }
+                else {
+                    C.Add(hHash, sHash*tuple.Item2);
+                    //Console.WriteLine("aaa"+C[hHash]);
+                }  
         }
         return C;
     }
 
-    private long EstimateX() {
+    public long EstimateX(IEnumerable<Tuple<ulong, int>> stream) {
+        this.Init(stream);
         long sum = 0;
-        for (int i = 0; i < C.Length; i++) {
-            sum += (long)Math.Pow(C[i], 2);
+        foreach (var x in C) {
+            sum += (long)x.Value * x.Value;
         }
         return sum;
     }
-
 }

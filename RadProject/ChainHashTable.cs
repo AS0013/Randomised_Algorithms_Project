@@ -84,7 +84,7 @@ public class ChainHashTable {
             // Console.WriteLine("LinkedList Count: " + list.Count);
             foreach (KeyValuePair<ulong, int> pair in list){
                 // Console.WriteLine("Pair: " + pair.Key + " " + pair.Value);
-                sum += (long)Math.Pow(pair.Value, 2);
+                sum += (long)pair.Value * pair.Value;
 
             }
         }
