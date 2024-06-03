@@ -1,6 +1,7 @@
 # Randomised_Algorithms_Project
 To run the project, first build it by navigating to the directory ***RadProject*** and use the command:
 > dotnet build
+
 The program can then be run using the following command in the same directory:
 > dotnet run
 
