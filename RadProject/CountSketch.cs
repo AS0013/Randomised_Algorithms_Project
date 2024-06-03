@@ -49,7 +49,7 @@ public class CountSketch {
     public CountSketch(CountSketchHash g, int l) {
         this.g = g;
         this.l = l;
-        this.arraySize = 1 << l; // Array size is 2^l
+        this.arraySize = 1 << l; // Array size is 2^l or m idk
         C = new int[arraySize];
     }
 
@@ -59,14 +59,13 @@ public class CountSketch {
             ulong hHash = hHashPair.Item1;
             int sHash = hHashPair.Item2;
 
-            // Use modulo to ensure the hash index fits within the array bounds
+            // to ensure the hash index fits within the array bounds, and also the hhash value is a ulong so we get it to int
             int index = (int)(hHash % (ulong)arraySize);
             C[index] += sHash * tuple.Item2;
         }
     }
 
     public long EstimateX(IEnumerable<Tuple<ulong, int>> stream) {
-        Array.Clear(C, 0, C.Length); // Clear previous state if any
         this.Init(stream);
 
         long sum = 0;

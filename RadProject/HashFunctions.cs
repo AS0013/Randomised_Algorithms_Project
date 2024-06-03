@@ -24,13 +24,16 @@ public class MulModPriHash : HashFunction{
     BigInteger a;
     BigInteger b;
 
+    BigInteger p;
+
     public MulModPriHash(BigInteger a, BigInteger b,int l){
         this.a = a; 
         this.b = b; 
         this.l = l; 
+        p = BigInteger.Pow(2,89)-1;
     }
     public override ulong Hash(ulong x){
-        BigInteger p = BigInteger.Pow(2,89)-1;
+        // BigInteger p = BigInteger.Pow(2,89)-1;
         BigInteger x_big = new BigInteger(x);
         BigInteger y =  ((BigInteger.Multiply(a,x_big) + b) & p) + ((BigInteger.Multiply(a,x_big) + b) >> 89);
 
@@ -73,9 +76,11 @@ public class FourHashFunction{
 
         for (int i = 2; i >= 0; i--)
         {
-            BigInteger temp = BigInteger.Multiply(y, x_big);
-            y = temp + a_values[i];
-            y = (y & p) + (y >> 89);
+            // BigInteger temp = BigInteger.Multiply(y, x_big);
+            // y = temp + a_values[i];
+            // y = (y & p) + (y >> 89);
+            y = (y*x_big + a_values[i]) & p ;
+            y += y >> 89;
             // y = (y * x_big + a_values[i]) % p;
         }
 
@@ -100,7 +105,7 @@ public class CountSketchHash : HashFunction{
         //h(x)
         ulong h = (ulong)(g.Hash(x) & ((1UL<<l)-1));
         //s(x)
-        int s = (int)(1-2*((BigInteger)g.Hash(x) >> (b-1)));
+        int s = (int)(1-2*(g.Hash(x) >> (b-1)));
         return (h,s);
     }
 }
