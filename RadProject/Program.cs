@@ -156,7 +156,7 @@ namespace RadProject
                 avgRuntime = avgRuntime/testCount;
 
                 //results list sorted after estimates
-                List<long>QSTableSorted = QSTable;
+                List<long>QSTableSorted = new List<long>(QSTable);
                 QSTableSorted.Sort();
 
                 //mean square error, Expected value, variance.
@@ -206,8 +206,8 @@ namespace RadProject
                 // Add a scatter plot
                 plt.Add.Line(0, quadraticSum,100, quadraticSum);
                 List<int> numbers = Enumerable.Range(1, 100).ToList();
-                plt.Add.ScatterPoints(numbers, QSTable);
-                plt.Axes.SetLimits(0, 100, quadraticSum*0.3, quadraticSum*1.3);
+                plt.Add.ScatterPoints(numbers, QSTableSorted);
+                plt.Axes.SetLimits(0, 100, QSTableSorted[0]-0.1*(QSTableSorted[QSTableSorted.Count-1]-QSTableSorted[0]), QSTableSorted[QSTableSorted.Count-1]+0.1*(QSTableSorted[QSTableSorted.Count-1]-QSTableSorted[0]));
                 string filepath1=$"100ResultsPlotT{t}.png";
                 plt.SavePng(filepath1, 1024, 768);
                 Console.WriteLine("100 points Plot saved in directory");
@@ -217,7 +217,7 @@ namespace RadProject
                 plt2.Add.Line(0, quadraticSum,10, quadraticSum);
                 List<int> numbers2 = Enumerable.Range(1, 9).ToList();
                 plt2.Add.ScatterPoints(numbers2, QSTablemedians);
-                plt2.Axes.SetLimits(0, 10, quadraticSum*0.3, quadraticSum*1.3);
+                plt2.Axes.SetLimits(0, 10,QSTableSorted[0]-0.1*(QSTableSorted[QSTableSorted.Count-1]-QSTableSorted[0]), QSTableSorted[QSTableSorted.Count-1]+0.1*(QSTableSorted[QSTableSorted.Count-1]-QSTableSorted[0]));
                 string filepath2=$"MediansPlotT{t}.png";
                 plt2.SavePng(filepath2, 1024, 768);
                 Console.WriteLine("medians Plot saved in directory");
