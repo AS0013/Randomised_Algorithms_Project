@@ -50,19 +50,22 @@ public class FourHashFunction{
 
     List<BigInteger> a_values = new List<BigInteger>();
 
+    BigInteger p;
+
     public FourHashFunction (BigInteger a0, BigInteger a1,BigInteger a2,BigInteger a3 ){
         a_values.Add(a0);
         a_values.Add(a1);
         a_values.Add(a2);
         a_values.Add(a3);
+        p = BigInteger.Pow(2, 89) - 1;   
     }
 
     public BigInteger Hash(ulong x)
     {
 
-        BigInteger p;
+        // BigInteger p;
 
-        p = BigInteger.Pow(2, 89) - 1;
+        // p = BigInteger.Pow(2, 89) - 1;
 
         BigInteger x_big = new BigInteger(x);
 
