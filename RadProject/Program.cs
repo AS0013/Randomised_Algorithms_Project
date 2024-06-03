@@ -109,15 +109,11 @@ namespace RadProject
             int[] tValues = {8,12,16};
             foreach (int t in tValues){                
                 // Calculate Quadratic Sum
-                // initiate fourhash
-                BigInteger a0 = BigInteger.Parse("339176588342155335418149214"); // Generated using https://www.random.org/bytes/
-                BigInteger a1 = BigInteger.Parse("545615294102633400098072839"); // Generated using https://www.random.org/bytes/
-                BigInteger a2 = BigInteger.Parse("559758820152785102864000321"); // Generated using https://www.random.org/bytes/
-                BigInteger a3 = BigInteger.Parse("189597206666064321536354137"); // Generated using https://www.random.org/bytes/
-                FourHashFunction fourhashfunc = new FourHashFunction(a0,a1,a2,a3);
-                // initiate countsketchhash
-                CountSketchHash countSketchHash = new CountSketchHash(fourhashfunc ,t);
-                ChainHashTable table1 = new ChainHashTable(t,countSketchHash);
+                // initiate modprimehash
+                BigInteger b = BigInteger.Parse("595679239539172459088339861");
+                BigInteger c = BigInteger.Parse("165641934261307971454905931");
+                MulModPriHash mulModPriHash = new MulModPriHash(b,c,l7);
+                ChainHashTable table1 = new ChainHashTable(t,mulModPriHash);
                 long quadraticSum = table1.QuadraticSum(stream7);
                 Console.WriteLine("OPG8 Experiment: Number of elements n : 2^" +max7+"  Number of different elements 2^l: 2^" +l7+ " Range m = 2^t of hash function h: 2^" + t+ " Quadratic sum:" + quadraticSum );
                 // initiate results list for estimates:
