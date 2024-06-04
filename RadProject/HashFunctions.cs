@@ -53,6 +53,10 @@ public class FourHashFunction{
     List<BigInteger> a_values = new List<BigInteger>();
 
     BigInteger p;
+    BigInteger temp;
+    BigInteger x_big;
+
+    BigInteger y;
 
     public FourHashFunction (BigInteger a0, BigInteger a1,BigInteger a2,BigInteger a3 ){
         a_values.Add(a0);
@@ -66,13 +70,14 @@ public class FourHashFunction{
     {
 
 
-        BigInteger x_big = new BigInteger(x);
+        x_big = (BigInteger)x;
 
-        BigInteger y = a_values[3];
+        y = a_values[3];
+        // BigInteger temp;
 
         for (int i = 2; i >= 0; i--)
         {
-            BigInteger temp = BigInteger.Multiply(y, x_big);
+            temp = BigInteger.Multiply(y, x_big);
             y = temp + a_values[i];
             y = (y & p) + (y >> 89);
         }
@@ -88,6 +93,7 @@ public class FourHashFunction{
 public class CountSketchHash : HashFunction{
     FourHashFunction g;
     int b = 89;
+    BigInteger x_Big;
     public CountSketchHash (FourHashFunction g, int l){
         this.g = g;
         this.l = l;
@@ -95,10 +101,11 @@ public class CountSketchHash : HashFunction{
 
     public (ulong,int) CSHash(ulong x)
     {
+        x_Big = g.Hash(x);
         //h(x)
-        ulong h = (ulong)(g.Hash(x) & ((1UL<<l)-1));
+        ulong h = (ulong)(x_Big & ((1UL<<l)-1));
         //s(x)
-        int s = (int)(1-2*(g.Hash(x) >> (b-1)));
+        int s = (int)(1-2*(x_Big >> (b-1)));
         return (h,s);
     }
 }
