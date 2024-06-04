@@ -33,7 +33,6 @@ public class MulModPriHash : HashFunction{
         p = BigInteger.Pow(2,89)-1;
     }
     public override ulong Hash(ulong x){
-        // BigInteger p = BigInteger.Pow(2,89)-1;
         BigInteger x_big = new BigInteger(x);
         BigInteger y =  ((BigInteger.Multiply(a,x_big) + b) & p) + ((BigInteger.Multiply(a,x_big) + b) >> 89);
 
@@ -66,9 +65,6 @@ public class FourHashFunction{
     public BigInteger Hash(ulong x)
     {
 
-        // BigInteger p;
-
-        // p = BigInteger.Pow(2, 89) - 1;
 
         BigInteger x_big = new BigInteger(x);
 
@@ -79,9 +75,6 @@ public class FourHashFunction{
             BigInteger temp = BigInteger.Multiply(y, x_big);
             y = temp + a_values[i];
             y = (y & p) + (y >> 89);
-            // y = (y*x_big + a_values[i]) & p ;
-            // y += y >> 89;
-            // y = (y * x_big + a_values[i]) % p;
         }
 
         if (y>=p){

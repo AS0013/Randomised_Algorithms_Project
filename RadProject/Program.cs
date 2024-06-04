@@ -58,7 +58,7 @@ namespace RadProject
             int n = (int)Math.Pow(2,max);
             Console.WriteLine("Opgave 3 quadratic sum:");
             Console.WriteLine("VALUE OF n: n = ", n);
-            int[] lValues = {2,4,6,8,10,12,14,16,17,18};
+            int[] lValues = {2,4,6,8,10,12,14,16,17};
             foreach (int l in lValues)
             {
                 Console.WriteLine("TEST WITH l = " +l);
@@ -98,7 +98,7 @@ namespace RadProject
 
             //OPGAVE 7 & 8:
             Console.WriteLine("Opgave 7 & 8:");
-            int l7 = 17;
+            int l7 = 16;
             // geneate test stream
             int max7 = 18;
             int n7 = (int)Math.Pow(2,max7);

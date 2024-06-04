@@ -5,15 +5,15 @@ namespace RadProject;
 public class ChainHashTable {
     HashFunction h;
     int l;
-    private SortedList<ulong , LinkedList<KeyValuePair<ulong, int>>> table;
+    private LinkedList<KeyValuePair<ulong, int>>[] table;
     public ChainHashTable (int l, HashFunction h){
         this.l = l;
-        this.table = new SortedList<ulong , LinkedList<KeyValuePair<ulong, int>>>();
+        this.table = new LinkedList<KeyValuePair<ulong, int>>[(ulong)Math.Pow(2,l)] ;
         this.h = h;
     }
     public int Get (ulong x){
         ulong index = h.Hash(x);
-        if (table.ContainsKey(index))
+        if (table[index] != null)
         {
             foreach (var pair in table[index])
             {
@@ -27,7 +27,7 @@ public class ChainHashTable {
     }
     public void Set (ulong x, int v){
         ulong index = h.Hash(x);
-        if (table.ContainsKey(index))
+        if (table[index] != null)
         {
             foreach (var pair in table[index])
             {
@@ -40,13 +40,13 @@ public class ChainHashTable {
             table[index].AddLast(new KeyValuePair<ulong, int> (x,v));
         }
         else {
-            table.Add(index, new LinkedList<KeyValuePair<ulong, int>>());
+            table[index] = new LinkedList<KeyValuePair<ulong, int>>();
             table[index].AddLast(new KeyValuePair<ulong, int> (x,v));
         }
     }
     public void Increment (ulong x, int v){
         ulong index = h.Hash(x);
-        if (table.ContainsKey(index))
+        if (table[index] != null)
         {
             foreach (var pair in table[index])
             {
@@ -59,7 +59,7 @@ public class ChainHashTable {
             table[index].AddLast(new KeyValuePair<ulong, int> (x,v));
         }
         else {
-            table.Add(index, new LinkedList<KeyValuePair<ulong, int>>());
+            table[index] = new LinkedList<KeyValuePair<ulong, int>>();
             table[index].AddLast(new KeyValuePair<ulong, int> (x,v));
         }
     }
@@ -77,10 +77,12 @@ public class ChainHashTable {
 
         this.InitializeTable(stream);
 
-        foreach (LinkedList<KeyValuePair<ulong, int>> list in table.Values){
-            foreach (KeyValuePair<ulong, int> pair in list){
-                sum += (long)pair.Value * pair.Value;
+        foreach (LinkedList<KeyValuePair<ulong, int>> list in table){
+            if (list!= null){
+                foreach (KeyValuePair<ulong, int> pair in list){
+                    sum += (long)pair.Value * pair.Value;
 
+                }
             }
         }
         return sum;
