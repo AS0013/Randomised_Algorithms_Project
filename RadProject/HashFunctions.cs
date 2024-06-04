@@ -40,7 +40,7 @@ public class MulModPriHash : HashFunction{
         if (y>=p){
             y -= p;
         }
-        ulong hash = (ulong)(y & ((1UL << 16) -1));
+        ulong hash = (ulong)(y & ((1UL << l) -1));
 
         return hash;
     }
@@ -76,11 +76,11 @@ public class FourHashFunction{
 
         for (int i = 2; i >= 0; i--)
         {
-            // BigInteger temp = BigInteger.Multiply(y, x_big);
-            // y = temp + a_values[i];
-            // y = (y & p) + (y >> 89);
-            y = (y*x_big + a_values[i]) & p ;
-            y += y >> 89;
+            BigInteger temp = BigInteger.Multiply(y, x_big);
+            y = temp + a_values[i];
+            y = (y & p) + (y >> 89);
+            // y = (y*x_big + a_values[i]) & p ;
+            // y += y >> 89;
             // y = (y * x_big + a_values[i]) % p;
         }
 

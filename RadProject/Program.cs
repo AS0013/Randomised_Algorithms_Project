@@ -112,7 +112,7 @@ namespace RadProject
                 BigInteger b = BigInteger.Parse("595679239539172459088339861");
                 BigInteger c = BigInteger.Parse("165641934261307971454905931");
                 MulModPriHash mulModPriHash = new MulModPriHash(b,c,l7);
-                ChainHashTable table1 = new ChainHashTable(t,mulModPriHash);
+                ChainHashTable table1 = new ChainHashTable(l7,mulModPriHash);
                 long quadraticSum = table1.QuadraticSum(stream7);
                 Console.WriteLine("OPG8 Experiment: Number of elements n : 2^" +max7+"  Number of different elements 2^l: 2^" +l7+ " Range m = 2^t of hash function h: 2^" + t+ " Quadratic sum:" + quadraticSum );
                 // initiate results list for estimates:

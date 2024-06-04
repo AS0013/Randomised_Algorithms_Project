@@ -60,8 +60,9 @@ public class CountSketch {
             int sHash = hHashPair.Item2;
 
             // to ensure the hash index fits within the array bounds, and also the hhash value is a ulong so we get it to int
-            int index = (int)(hHash % (ulong)arraySize);
-            C[index] += sHash * tuple.Item2;
+            // int index = (int)(hHash % (ulong)arraySize);
+            // C[index] += sHash * tuple.Item2;
+            C[hHash] += sHash * tuple.Item2;
         }
     }
 
